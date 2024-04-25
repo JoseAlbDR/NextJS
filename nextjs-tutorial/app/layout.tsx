@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en" data-theme="cupcake">
       <body className={inter.className}>
         <Navbar />
-        {children}
+        <main className="px-8 py-20 max-w-6xl mx-auto">{children}</main>
       </body>
     </html>
   );

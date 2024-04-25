@@ -16,7 +16,7 @@ const config: Config = {
     },
   },
   daisyui: {
-    themes: ['dracula', 'cupcake'],
+    themes: ['dracula'],
   },
   plugins: [require('@tailwindcss/typography'), require('daisyui')],
 };
