@@ -1,3 +1,4 @@
+import DrinkList from '@/components/DrinkList';
 import Image from 'next/image';
 import React from 'react';
 const url = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?f=a';
@@ -13,28 +14,9 @@ const fetchDrinks = async () => {
 const DrinksPage = async () => {
   const data = await fetchDrinks();
   return (
-    <h1 className="flex flex-wrap gap-4 items-center justify-center w-full">
-      {data.drinks.map(
-        (drink: {
-          isDrink: number;
-          strDrinkThumb: string;
-          strDrink: string;
-        }) => {
-          return (
-            <div className="card" key={drink.isDrink}>
-              <Image
-                src={drink.strDrinkThumb}
-                alt="drink"
-                width={275}
-                height={200}
-                className="image-full"
-              />
-              <p>{drink.strDrink}</p>
-            </div>
-          );
-        }
-      )}
-    </h1>
+    <div>
+      <DrinkList data={data} />;
+    </div>
   );
 };
 
