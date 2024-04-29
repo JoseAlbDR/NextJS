@@ -10,10 +10,10 @@ export interface Drink {
 
 const DrinkList = ({ data }: { data: { drinks: Drink[] } }) => {
   return (
-    <ul className="menu menu-vertical pl-0">
+    <ul className="grid sm:gid-cols-2 gap-6 mt-6">
       {data.drinks.map((drink: Drink) => {
         return (
-          <li className="card" key={drink.idDrink}>
+          <li key={drink.idDrink}>
             <Image
               src={drink.strDrinkThumb}
               alt="drink"

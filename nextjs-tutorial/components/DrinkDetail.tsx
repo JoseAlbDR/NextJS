@@ -11,7 +11,7 @@ const DrinkDetail = ({ drink }: { drink: Drink }) => {
         alt="drink"
         width={300}
         height={300}
-        className="image-full shadow-lg rounded-lg w-48 h-48"
+        className="object-cover shadow-lg rounded-lg w-48 h-48"
       />
       <Link href={`/drinks/${drink?.idDrink}`}>{drink?.strDrink}</Link>
       <Link href="/drinks" className="btn btn-primary">
