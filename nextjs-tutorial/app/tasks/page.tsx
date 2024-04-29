@@ -1,17 +1,13 @@
 import React from 'react';
 import TaskForm from '../../components/TaskForm';
 import prisma from '@/utils/db';
+import TaskList from '@/components/TaskList';
 
-const TasksPage = async () => {
-  const onSubmit = async (content: string) => {
-    await prisma.task.create({
-      data: { content },
-    });
-  };
-
+const TasksPage = () => {
   return (
     <div>
-      <TaskForm onSubmit={onSubmit} />
+      <TaskForm />
+      <TaskList />
     </div>
   );
 };

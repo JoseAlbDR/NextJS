@@ -1,20 +1,9 @@
+import { createTaskAction } from '@/utils/actions';
 import React from 'react';
 
-const TaskForm = ({
-  onSubmit,
-}: {
-  onSubmit: (content: string) => Promise<void>;
-}) => {
+const TaskForm = async () => {
   return (
-    <form
-      className="flex gap-4 justify-between"
-      onSubmit={(e) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        const content = formData.get('content') as string;
-        onSubmit(content);
-      }}
-    >
+    <form className="flex gap-4 justify-between" action={createTaskAction}>
       <label className="input input-bordered flex items-center gap-2 grow">
         <input
           type="text"
