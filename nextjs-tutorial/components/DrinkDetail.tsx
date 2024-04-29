@@ -9,9 +9,9 @@ const DrinkDetail = ({ drink }: { drink: Drink }) => {
       <Image
         src={drink?.strDrinkThumb}
         alt="drink"
-        width={275}
-        height={200}
-        className="image-full"
+        width={300}
+        height={300}
+        className="image-full shadow-lg rounded-lg w-48 h-48"
       />
       <Link href={`/drinks/${drink?.idDrink}`}>{drink?.strDrink}</Link>
       <Link href="/drinks" className="btn btn-primary">

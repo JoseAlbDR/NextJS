@@ -17,9 +17,9 @@ const DrinkList = ({ data }: { data: { drinks: Drink[] } }) => {
             <Image
               src={drink.strDrinkThumb}
               alt="drink"
-              width={275}
-              height={200}
-              className="image-full"
+              width={300}
+              height={300}
+              className="w-48 h-48 image-full shadow-lg rounded-lg"
             />
             <Link href={`/drinks/${drink.idDrink}`}>{drink.strDrink}</Link>
           </li>
