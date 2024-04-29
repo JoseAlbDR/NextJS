@@ -14,6 +14,9 @@ const DrinkDetail = ({ drink }: { drink: Drink }) => {
         className="image-full"
       />
       <Link href={`/drinks/${drink?.idDrink}`}>{drink?.strDrink}</Link>
+      <Link href="/drinks" className="btn btn-primary">
+        Go Back
+      </Link>
     </li>
   );
 };

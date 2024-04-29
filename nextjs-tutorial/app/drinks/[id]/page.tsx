@@ -3,12 +3,17 @@ import { Drink } from '@/components/DrinkList';
 
 import React from 'react';
 
-const page = async ({ params }: { params: { id: string } }) => {
-  const response = await fetch(
-    `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${params.id}`
+const getSingleDrink = async (id: string) => {
+  const res = await fetch(
+    `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`
   );
 
-  const data = await response.json();
+  if (!res.ok) throw new Error('Failed to fetch a drink...');
+  return res.json();
+};
+
+const page = async ({ params }: { params: { id: string } }) => {
+  const data = await getSingleDrink(params.id);
 
   const drinks: Drink[] = data.drinks;
 
