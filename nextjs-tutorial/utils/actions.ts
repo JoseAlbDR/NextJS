@@ -10,7 +10,7 @@ export const createTaskAction = async (data: FormData) => {
   revalidatePath('/tasks');
 };
 
-export const getAllTasksAtion = async () => {
+export const getAllTasksAction = async () => {
   const tasks = await prisma.task.findMany({
     orderBy: { createdAt: 'desc' },
   });
