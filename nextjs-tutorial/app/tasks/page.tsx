@@ -1,7 +1,15 @@
 import React from 'react';
+import TaskForm from '../../components/TaskForm';
+import prisma from '@/utils/db';
+import TaskList from '@/components/TaskList';
 
 const TasksPage = () => {
-  return <h1 className="text-7xl">TasksPage</h1>;
+  return (
+    <div>
+      <TaskForm />
+      <TaskList />
+    </div>
+  );
 };
 
 export default TasksPage;
