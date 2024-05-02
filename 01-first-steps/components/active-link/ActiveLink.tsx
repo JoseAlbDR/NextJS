@@ -13,7 +13,9 @@ export const ActiveLink = ({ path, text }: Props) => {
 
   return (
     <Link
-      className={`${pathname === path ? 'underline text-blue-900' : ''}`}
+      className={`hover:underline hover:text-blue-400 transition-all ${
+        pathname === path ? 'text-blue-500' : ''
+      }`}
       href={path}
     >
       {text}
