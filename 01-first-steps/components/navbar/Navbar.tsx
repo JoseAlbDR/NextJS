@@ -27,7 +27,7 @@ export const Navbar = async () => {
       </Link>
       <div className="flex gap-3 ">
         {navItems.map((item) => (
-          <ActiveLink key={item.path} text={item.text} path={item.path} />
+          <ActiveLink key={item.path} {...item} />
         ))}
       </div>
     </nav>
