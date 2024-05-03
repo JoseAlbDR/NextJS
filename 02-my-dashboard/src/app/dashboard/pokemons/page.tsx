@@ -1,8 +1,6 @@
 import React from 'react';
-import { PokemonsResponse } from '../../pokemons/interfaces/pokemons-response';
-import { SimplePokemon } from '@/app/pokemons';
-import PokemonCard from './components/PokemonCard';
-import PokemonGrid from './components/PokemonGrid';
+import { PokemonsResponse } from './interfaces/pokemons-response';
+import { PokemonGrid, SimplePokemon } from '@/app/dashboard/pokemons';
 
 const getPokemons = async (
   limit = 20,

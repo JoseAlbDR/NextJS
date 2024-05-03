@@ -1,4 +1,4 @@
-import { PokemonDetail } from '@/app/pokemons/interfaces/pokemon-detail';
+import { PokemonDetail } from '@/app/dashboard/pokemons/interfaces/pokemon-detail';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
