@@ -1,5 +1,6 @@
 import { PokemonDetail } from '@/app/pokemons/interfaces/pokemon-detail';
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 
 interface Props {
@@ -18,14 +19,26 @@ const PokemonCard = async ({ id, name }: Props) => {
   const pokemon = await getPokemon(id);
 
   return (
-    <div className="flex flex-col items-center justify-center p-6 border border-black shadow-md rounded-md">
-      <Image
-        src={pokemon.sprites.front_default}
-        height={250}
-        width={250}
-        alt={name}
-      />
-      <span className="text-4xl capitalize">{name}</span>
+    <div className="mx-auto right-0 mt-2 w-60">
+      <div className="bg-white rounded overflow-hidden shadow-lg">
+        <div className="flex flex-col items-center justify-center text-center p-6 bg-gray-800 border-b">
+          <Image
+            src={pokemon.sprites.front_default}
+            alt={name}
+            height={100}
+            width={100}
+          />
+          <p className="pt-2 text-lg font-semibold text-gray-50">{name}</p>
+          <div className="mt-5">
+            <Link
+              href="#"
+              className="border rounded-full py-2 px-4 text-xs font-semibold text-gray-100"
+            >
+              Detalles
+            </Link>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

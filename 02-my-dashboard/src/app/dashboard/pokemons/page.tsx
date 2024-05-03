@@ -2,6 +2,7 @@ import React from 'react';
 import { PokemonsResponse } from '../../pokemons/interfaces/pokemons-response';
 import { SimplePokemon } from '@/app/pokemons';
 import PokemonCard from './components/PokemonCard';
+import PokemonGrid from './components/PokemonGrid';
 
 const getPokemons = async (
   limit = 20,
@@ -24,11 +25,10 @@ const PokemonsPage = async () => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex flex-wrap gap-10 items-center justify-center">
-        {pokemons.map((pokemon) => (
-          <PokemonCard key={pokemon.id} id={pokemon.id} name={pokemon.name} />
-        ))}
-      </div>
+      <span className="text-5xl my-4">
+        Listado de Pokemons <small>estático</small>
+        <PokemonGrid pokemons={pokemons} />
+      </span>
     </div>
   );
 };
