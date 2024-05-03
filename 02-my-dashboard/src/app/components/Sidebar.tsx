@@ -1,6 +1,11 @@
 import Image from 'next/image';
 import React from 'react';
-import { IoBrowsersOutline, IoCalculator, IoLogoReact } from 'react-icons/io5';
+import {
+  IoBaseballOutline,
+  IoBrowsersOutline,
+  IoCalculator,
+  IoLogoReact,
+} from 'react-icons/io5';
 import SidebarMenuItem from './SidebarMenuItem';
 
 const menuItems = [
@@ -15,6 +20,12 @@ const menuItems = [
     icon: <IoCalculator size={40} />,
     title: 'Counter',
     subtitle: 'Client Side Counter',
+  },
+  {
+    path: '/dashboard/pokemons',
+    icon: <IoBaseballOutline size={40} />,
+    title: 'Pokemons',
+    subtitle: 'Hazte con todos',
   },
 ];
 

@@ -1,7 +1,12 @@
+'use client';
 import React, { useState } from 'react';
 
-const CartCounter = () => {
-  const [counter, setCounter] = useState(0);
+interface Props {
+  value?: number;
+}
+
+const CartCounter = ({ value = 10 }: Props) => {
+  const [counter, setCounter] = useState(value);
   return (
     <>
       <span className="text-9xl">{counter}</span>
