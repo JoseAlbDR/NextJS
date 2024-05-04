@@ -8,6 +8,17 @@ interface Props {
   params: { id: string };
 }
 
+//* Generación estática de páginas
+//! Se ejecuta en build time
+export const generateStaticParams = async () => {
+  const array = Array.from({ length: 151 }).map((_, i) => ({
+    id: String(i + 1),
+  }));
+
+  return array;
+};
+
+//* Generación dinámica de metadata
 export const generateMetadata = async ({
   params,
 }: Props): Promise<Metadata> => {
