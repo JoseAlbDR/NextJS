@@ -6,7 +6,7 @@ const MainPage = () => {
     <div className="text-black">
       <h1 className="text-3xl mt-2">Dashboard</h1>
       <span className="text-xl">Información general</span>
-      <div className="flex flex-wrap p-2">
+      <div className="flex flex-wrap p-2 gap-2 items-center justify-center">
         <SimpleWidget />
       </div>
     </div>
