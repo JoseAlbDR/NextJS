@@ -6,7 +6,7 @@ export default function NotFoundPage() {
       <div className="flex">
         <Sidebar />
         <div className="p-2 w-full text-slate-900">
-          <NotFound title="Page" />
+          <NotFound title="Pokemon" />
         </div>
       </div>
     </div>
