@@ -1,6 +1,12 @@
 import React from 'react';
 import { PokemonsResponse } from './interfaces/pokemons-response';
 import { PokemonGrid, SimplePokemon } from '@/app/dashboard/pokemons';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Pokemons',
+  description: 'Lista de pokemons',
+};
 
 const getPokemons = async (
   limit = 20,
