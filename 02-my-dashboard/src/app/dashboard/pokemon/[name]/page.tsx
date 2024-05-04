@@ -1,5 +1,5 @@
 import React from 'react';
-import { PokemonDetail } from '@/app/dashboard/pokemons';
+import { PokemonDetail, PokemonsResponse } from '@/app/dashboard/pokemons';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
@@ -10,13 +10,17 @@ interface Props {
 
 //* Generación estática de páginas
 // //! Se ejecuta en build time
-// export const generateStaticParams = async () => {
-//   const array = Array.from({ length: 151 }).map((_, i) => ({
-//     id: String(i + 1),
-//   }));
+export const generateStaticParams = async () => {
+  const data: PokemonsResponse = await fetch(
+    `https://pokeapi.co/api/v2/pokemon?limit=151`
+  ).then((res) => res.json());
 
-//   return array;
-// };
+  const pokemons = data.results.map((pokemon) => ({
+    name: pokemon.name,
+  }));
+
+  return pokemons.map(({ name }) => ({ name: name }));
+};
 
 //* Generación dinámica de metadata
 export const generateMetadata = async ({

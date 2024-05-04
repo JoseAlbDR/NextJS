@@ -6,7 +6,9 @@ interface Props {
 }
 
 const PokemonGrid = ({ pokemons }: Props) => {
-  return (
+  return pokemons.length === 0 ? (
+    <div className="text-lg mt-4">Aun no hay ningún favorito</div>
+  ) : (
     <div className="flex flex-wrap gap-10 items-center justify-center">
       {pokemons.map((pokemon) => (
         <PokemonCard key={pokemon.id} id={pokemon.id} name={pokemon.name} />
