@@ -1,6 +1,6 @@
-import { CartCounter } from '@/app/components/shopping-cart';
+import { CartCounter } from '@/components/shopping-cart';
 import { Metadata } from 'next';
-import React, { useState } from 'react';
+import React from 'react';
 
 export const metadata: Metadata = {
   title: 'Counter page',

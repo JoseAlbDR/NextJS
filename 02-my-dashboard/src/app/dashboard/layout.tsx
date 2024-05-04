@@ -1,6 +1,5 @@
-import Image from 'next/image';
+import { Sidebar } from '@/components';
 import React, { PropsWithChildren } from 'react';
-import { Sidebar } from '../components';
 
 const DashboardLayout = ({ children }: PropsWithChildren) => {
   return (
