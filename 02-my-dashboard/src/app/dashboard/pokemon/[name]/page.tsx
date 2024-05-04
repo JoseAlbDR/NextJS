@@ -5,25 +5,25 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 
 interface Props {
-  params: { id: string };
+  params: { name: string };
 }
 
 //* Generación estática de páginas
-//! Se ejecuta en build time
-export const generateStaticParams = async () => {
-  const array = Array.from({ length: 151 }).map((_, i) => ({
-    id: String(i + 1),
-  }));
+// //! Se ejecuta en build time
+// export const generateStaticParams = async () => {
+//   const array = Array.from({ length: 151 }).map((_, i) => ({
+//     id: String(i + 1),
+//   }));
 
-  return array;
-};
+//   return array;
+// };
 
 //* Generación dinámica de metadata
 export const generateMetadata = async ({
   params,
 }: Props): Promise<Metadata> => {
   try {
-    const { id, name } = await getPokemon(params.id);
+    const { id, name } = await getPokemon(params.name);
 
     return {
       title: `#${id} - ${name}`,
@@ -37,10 +37,10 @@ export const generateMetadata = async ({
   }
 };
 
-const getPokemon = async (id: string): Promise<PokemonDetail> => {
+const getPokemon = async (name: string): Promise<PokemonDetail> => {
   try {
     const pokemon: PokemonDetail = await fetch(
-      `https://pokeapi.co/api/v2/pokemon/${id}`,
+      `https://pokeapi.co/api/v2/pokemon/${name}`,
       {
         // cache: 'force-cache',
         next: {
@@ -57,7 +57,7 @@ const getPokemon = async (id: string): Promise<PokemonDetail> => {
 };
 
 const PokemonPage = async ({ params }: Props) => {
-  const pokemon = await getPokemon(params.id);
+  const pokemon = await getPokemon(params.name);
 
   return (
     <div className="flex mt-5 flex-col items-center text-slate-800">
