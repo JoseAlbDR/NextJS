@@ -1,15 +1,14 @@
-import { PokemonDetail } from '@/app/dashboard/pokemons/interfaces/pokemon-detail';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-import { IoHeartOutline } from 'react-icons/io5';
+import FavoriteCTA from './FavoriteCTA';
 
 interface Props {
   name: string;
   id: string;
 }
 
-const PokemonCard = async ({ id, name }: Props) => {
+const PokemonCard = ({ id, name }: Props) => {
   return (
     <div className="mx-auto right-0 mt-2 w-60">
       <div className="bg-white rounded overflow-hidden shadow-lg">
@@ -33,20 +32,7 @@ const PokemonCard = async ({ id, name }: Props) => {
           </div>
         </div>
         <div className="border-b">
-          <Link
-            href="/dashboard/main"
-            className="px-4 py-2 hover:bg-gray-100 flex justify-center items-center"
-          >
-            <div className="text-red-600">
-              <IoHeartOutline />
-            </div>
-            <div className="pl-3">
-              <p className="text-sm font-medium text-gray-800 leading-none">
-                No es Favorito
-              </p>
-              <p className="text-xs text-gray-500">View your campaigns</p>
-            </div>
-          </Link>
+          <FavoriteCTA pokemon={{ id, name }} />
         </div>
       </div>
     </div>
