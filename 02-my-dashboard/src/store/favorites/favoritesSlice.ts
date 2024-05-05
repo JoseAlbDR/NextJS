@@ -24,8 +24,6 @@ const favoritesSlice = createSlice({
 
       if (!!state[id]) delete state[id];
       else state[id] = pokemon;
-
-      localStorage.setItem('favorites', JSON.stringify(state));
     },
   },
 });
