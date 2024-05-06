@@ -4,7 +4,7 @@ import { PokemonGrid } from '../../pokemons';
 import { useAppSelector } from '@/store';
 
 const FavoriteList = () => {
-  const favorites = useAppSelector((state) => state.favorites);
+  const favorites = useAppSelector((state) => state.favorites.favorites);
 
   const favoritesArray = Object.keys(favorites).map((key) => favorites[key]);
 

@@ -6,8 +6,8 @@ import { localStorageMiddleware } from './middleware/localStorage-middleware';
 
 export const store = configureStore({
   reducer: { counter: counterReducer, favorites: favoritesSlice },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(localStorageMiddleware as Middleware),
+  // middleware: (getDefaultMiddleware) =>
+  //   getDefaultMiddleware().concat(localStorageMiddleware as Middleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

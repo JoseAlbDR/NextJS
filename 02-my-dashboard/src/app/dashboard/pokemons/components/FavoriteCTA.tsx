@@ -11,7 +11,7 @@ interface Props {
 }
 
 const FavoriteCTA = ({ pokemon: { id, name } }: Props) => {
-  const pokemon = useAppSelector((state) => state.favorites[id]);
+  const pokemon = useAppSelector((state) => state.favorites.favorites[id]);
   const dispatch = useAppDispatch();
 
   const onToggle = () => {
