@@ -11,5 +11,4 @@ services:
     environment:
       - POSTGRES_PASSWORD=mypassword
       - POSTGRES_USER=postgres
-      - POSTGRES_DB=admin-todos
     restart: always
