@@ -10,7 +10,7 @@ export async function GET(
   const todo = await prisma.todo.findUnique({ where: { id } });
 
   if (!todo)
-    return NextResponse.json({ message: 'Todo not found', status: 404 });
+    return NextResponse.json({ message: 'Todo not found' }, { status: 404 });
 
-  return NextResponse.json({ todo });
+  return NextResponse.json(todo);
 }
