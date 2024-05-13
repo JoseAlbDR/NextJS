@@ -23,7 +23,7 @@ const ServerTodosPage = async () => {
       <h2 className="text-4xl">Server Actions</h2>
       <div className="flex flex-col gap-4 p-4">
         <div className="w-full mx-4">
-          <NewTodo deleteCompleted={deleteCompleted} />
+          <NewTodo />
         </div>
         <TodosGrid todos={todos} />
       </div>

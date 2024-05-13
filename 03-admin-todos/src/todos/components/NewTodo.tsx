@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { IoTrashOutline } from 'react-icons/io5';
-import { createTodo } from '../actions/todo-actions';
+import { createTodo, deleteCompleted } from '../actions/todo-actions';
 
-const NewTodo = ({ deleteCompleted }: { deleteCompleted: () => void }) => {
+const NewTodo = () => {
   const [description, setDescription] = useState<string>('');
 
   return (
@@ -34,9 +34,7 @@ const NewTodo = ({ deleteCompleted }: { deleteCompleted: () => void }) => {
       <span className="flex flex-1"></span>
 
       <button
-        onClick={() => {
-          deleteCompleted();
-        }}
+        onClick={() => deleteCompleted()}
         type="button"
         className="flex items-center justify-center rounded ml-2 bg-red-400 p-2 text-white hover:bg-red-700 transition-all"
       >

@@ -4,6 +4,17 @@ import prisma from '@/app/lib/prisma';
 import { Todo } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 
+export const deleteCompleted = async (): Promise<boolean> => {
+  try {
+    await prisma.todo.deleteMany({ where: { complete: true } });
+    revalidatePath('/dashboard/server-todos');
+    return true;
+  } catch (error) {
+    console.log(error);
+    throw 'Error borrando todos';
+  }
+};
+
 export const createTodo = async (formData: FormData): Promise<Todo> => {
   const data = Object.fromEntries(formData);
 
