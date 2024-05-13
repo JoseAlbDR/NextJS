@@ -40,8 +40,5 @@ export async function POST(request: Request) {
     const todo = await prisma.todo.create({ data: { complete, description } });
 
     return NextResponse.json(todo);
-  } catch (error) {
-    console.log(error);
-    return NextResponse.json(error, { status: 400 });
-  }
+  } catch (error) {}
 }

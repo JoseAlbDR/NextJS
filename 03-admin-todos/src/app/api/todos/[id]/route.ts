@@ -34,12 +34,19 @@ export async function PUT(
   if (!todo)
     return NextResponse.json({ message: 'Todo not found' }, { status: 404 });
 
-  const { description, complete } = await putSchema.validate(body);
+  try {
+    const { description, complete } = await putSchema.validate(body);
 
-  await prisma.todo.update({
-    where: { id },
-    data: { description, complete },
-  });
+    console.log({ description, complete });
 
-  return NextResponse.json({ message: `Todo with id: ${id} updated.` });
+    await prisma.todo.update({
+      where: { id },
+      data: { description, complete },
+    });
+
+    return NextResponse.json({ message: `Todo with id: ${id} updated.` });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(error, { status: 400 });
+  }
 }
