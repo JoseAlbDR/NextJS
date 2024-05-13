@@ -1,5 +1,6 @@
 'use server';
-import { Todo } from '../components/TodosGrid';
+
+import { Todo } from '@prisma/client';
 
 export const toggleCompleted = async (
   id: string,

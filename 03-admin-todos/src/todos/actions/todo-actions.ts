@@ -2,6 +2,7 @@
 
 import prisma from '@/app/lib/prisma';
 import { Todo } from '@prisma/client';
+import { revalidatePath } from 'next/cache';
 
 export const toggleTodo = async (
   id: string,
@@ -19,6 +20,8 @@ export const toggleTodo = async (
       },
     });
 
+    // Revalidar caché para los updates en tiempo real
+    revalidatePath('/dashboard/server-todos');
     return updatedTodo;
   } catch (error) {
     console.log(error);
