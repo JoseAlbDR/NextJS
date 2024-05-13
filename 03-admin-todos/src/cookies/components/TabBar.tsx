@@ -1,6 +1,6 @@
 'use client';
-import { setCookie } from 'cookies-next';
-import { useState } from 'react';
+import { getCookie, setCookie } from 'cookies-next';
+import { useEffect, useState } from 'react';
 // https://tailwindcomponents.com/component/radio-buttons-1
 
 interface Props {
