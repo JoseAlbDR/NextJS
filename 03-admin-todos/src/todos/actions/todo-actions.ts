@@ -4,6 +4,24 @@ import prisma from '@/app/lib/prisma';
 import { Todo } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 
+export const createTodo = async (formData: FormData): Promise<Todo> => {
+  const data = Object.fromEntries(formData);
+
+  try {
+    const todo = await prisma.todo.create({
+      data: {
+        description: data.description as string,
+      },
+    });
+
+    revalidatePath('/dashboard/server-todos');
+    return todo;
+  } catch (error) {
+    console.log(error);
+    throw 'Error creando todo';
+  }
+};
+
 export const toggleTodo = async (
   id: string,
   complete: boolean
