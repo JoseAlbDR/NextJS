@@ -12,13 +12,11 @@ interface Props {
 const SidebarItem = ({ href, name, icon }: Props) => {
   const path = usePathname();
 
-  console.log({ path });
-
   return (
     <li>
       <Link
         href={href}
-        className={`relative px-4 py-3 flex items-center space-x-4 rounded-xl hover:bg-gradient-to-r hover:from-sky-400 hover:to-cyan-200 hover:text-white transition-all ${
+        className={`relative px-4 py-3 flex items-center space-x-4 rounded-xl group hover:bg-gradient-to-r hover:from-sky-400 hover:to-cyan-200 hover:text-white transition-all ${
           path === href
             ? 'text-white bg-gradient-to-r from-sky-600 to-cyan-400'
             : ''

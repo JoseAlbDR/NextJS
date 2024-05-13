@@ -4,6 +4,7 @@ import React from 'react';
 import { CiBookmarkCheck, CiLogout } from 'react-icons/ci';
 import SidebarItem from './SidebarItem';
 import { FcTodoList } from 'react-icons/fc';
+import { IoCheckboxOutline, IoListOutline } from 'react-icons/io5';
 
 const sidebarItems = [
   {
@@ -14,7 +15,12 @@ const sidebarItems = [
   {
     href: '/dashboard/rest-todos',
     name: 'Rest Todos',
-    icon: <FcTodoList size={30} />,
+    icon: <IoListOutline size={30} />,
+  },
+  {
+    href: '/dashboard/server-todos',
+    name: 'Server Actions',
+    icon: <IoCheckboxOutline size={30} />,
   },
 ];
 
@@ -28,8 +34,8 @@ const Sidebar = () => {
               src="https://tailus.io/sources/blocks/stats-cards/preview/images/logo.svg"
               className="w-32"
               alt="tailus logo"
-              width={128}
-              height={128}
+              width={150}
+              height={150}
             />
           </Link>
         </div>
