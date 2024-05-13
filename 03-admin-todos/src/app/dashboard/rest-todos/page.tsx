@@ -1,4 +1,5 @@
-import { TodosGrid } from '@/todos';
+import prisma from '@/app/lib/prisma';
+import { NewTodo, TodosGrid } from '@/todos';
 import { Metadata } from 'next';
 import React from 'react';
 
@@ -12,7 +13,19 @@ const RestTodosPage = async () => {
     next: { revalidate: 0 },
   }).then((res) => res.json());
 
-  return <>{<TodosGrid todos={todos} />}</>;
+  const deleteCompleted = async () => {
+    'use server';
+    await prisma.todo.deleteMany({ where: { complete: true } });
+  };
+
+  return (
+    <div className="flex flex-col gap-4 p-4">
+      <div className="w-full mx-4">
+        <NewTodo deleteCompleted={deleteCompleted} />
+      </div>
+      <TodosGrid todos={todos} />
+    </div>
+  );
 };
 
 export default RestTodosPage;
