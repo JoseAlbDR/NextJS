@@ -10,13 +10,14 @@ export const metadata: Metadata = {
 
 const RestTodosPage = async () => {
   const todos = await fetch('http://localhost:3000/api/todos', {
+    // cache: 'no-store',
     next: { revalidate: 0 },
   }).then((res) => res.json());
 
-  const deleteCompleted = async () => {
-    'use server';
-    await prisma.todo.deleteMany({ where: { complete: true } });
-  };
+  // const deleteCompleted = async () => {
+  //   'use server';
+  //   await prisma.todo.deleteMany({ where: { complete: true } });
+  // };
 
   return (
     <div className="flex flex-col gap-4 p-4">
