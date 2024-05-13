@@ -8,9 +8,9 @@ export const metadata: Metadata = {
 };
 
 const RestTodosPage = async () => {
-  const todos = await fetch('http://localhost:3000/api/todos').then((res) =>
-    res.json()
-  );
+  const todos = await fetch('http://localhost:3000/api/todos', {
+    next: { revalidate: 0 },
+  }).then((res) => res.json());
 
   return <>{<TodosGrid todos={todos} />}</>;
 };
