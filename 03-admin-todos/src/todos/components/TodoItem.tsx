@@ -1,6 +1,6 @@
 'use client';
 import { Todo } from '@prisma/client';
-import React from 'react';
+import React, { startTransition, useOptimistic } from 'react';
 
 import { IoCheckboxOutline, IoSquareOutline } from 'react-icons/io5';
 
@@ -10,30 +10,51 @@ interface Props {
 }
 
 const TodoItem = ({ todo, toggleTodo }: Props) => {
+  const [todoOptimistic, toggleTodoOptimistic] = useOptimistic(
+    todo,
+    (state, newCompleteValue: boolean) => ({
+      ...state,
+      complete: newCompleteValue,
+    })
+  );
+
+  const onToggleTodo = async () => {
+    try {
+      startTransition(() => toggleTodoOptimistic(!todoOptimistic.complete));
+      await toggleTodo(todoOptimistic.id, todoOptimistic.complete);
+    } catch (error) {
+      console.log(error);
+      startTransition(() => toggleTodoOptimistic(!todoOptimistic.complete));
+    }
+  };
+
   return (
     <div
-      key={todo.id}
-      className={`card ${todo.complete ? 'todoDone' : 'todoPending'}`}
+      key={todoOptimistic.id}
+      className={`card ${todoOptimistic.complete ? 'todoDone' : 'todoPending'}`}
     >
       <div
-        onClick={() => toggleTodo(todo.id, todo.complete)}
+        // onClick={() => toggleTodo(todoOptimistic.id, todoOptimistic.complete)}
+        onClick={onToggleTodo}
         className={`card-body sm:flex-row hover:bg-opacity-60 cursor-pointer w-full ${
-          todo.complete ? 'bg-blue-100' : 'bg-red-100'
+          todoOptimistic.complete ? 'bg-blue-100' : 'bg-red-100'
         }`}
       >
-        {todo.complete ? (
+        {todoOptimistic.complete ? (
           <IoCheckboxOutline size={30} />
         ) : (
           <IoSquareOutline size={30} />
         )}
-        <p className="text-lg">{todo.description}</p>
+        <p className="text-lg">{todoOptimistic.description}</p>
         <p className="text-md">
-          {new Date(todo.createdAt).toLocaleDateString()}
+          {new Date(todoOptimistic.createdAt).toLocaleDateString()}
         </p>
         <span
-          className={`${todo.complete ? 'text-green-600' : 'text-red-500'}`}
+          className={`${
+            todoOptimistic.complete ? 'text-green-600' : 'text-red-500'
+          }`}
         >
-          {todo.complete ? 'Completado' : 'Sin completar'}
+          {todoOptimistic.complete ? 'Completado' : 'Sin completar'}
         </span>
       </div>
     </div>
