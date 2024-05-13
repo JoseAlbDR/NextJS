@@ -1,6 +1,17 @@
 import prisma from '@/app/lib/prisma';
+import { Todo } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import * as yup from 'yup';
+
+const getTodo = async (id: string): Promise<Todo | null> => {
+  try {
+    const todo = await prisma.todo.findUnique({ where: { id } });
+    return todo;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
 
 export async function GET(
   request: Request,
@@ -8,7 +19,7 @@ export async function GET(
 ) {
   const { id } = segments.params;
 
-  const todo = await prisma.todo.findUnique({ where: { id } });
+  const todo = await getTodo(id);
 
   if (!todo)
     return NextResponse.json({ message: 'Todo not found' }, { status: 404 });
@@ -26,10 +37,9 @@ export async function PUT(
   segments: { params: { id: string } }
 ) {
   const body = await request.json();
-  console.log({ body });
   const { id } = segments.params;
 
-  const todo = await prisma.todo.findUnique({ where: { id } });
+  const todo = await getTodo(id);
 
   if (!todo)
     return NextResponse.json({ message: 'Todo not found' }, { status: 404 });
