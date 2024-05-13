@@ -4,7 +4,12 @@ import React from 'react';
 import { CiBookmarkCheck, CiLogout } from 'react-icons/ci';
 import SidebarItem from './SidebarItem';
 import { FcTodoList } from 'react-icons/fc';
-import { IoCheckboxOutline, IoListOutline } from 'react-icons/io5';
+import {
+  IoCartOutline,
+  IoCheckboxOutline,
+  IoListOutline,
+  IoStarOutline,
+} from 'react-icons/io5';
 
 const sidebarItems = [
   {
@@ -21,6 +26,16 @@ const sidebarItems = [
     href: '/dashboard/server-todos',
     name: 'Server Actions',
     icon: <IoCheckboxOutline size={30} />,
+  },
+  {
+    href: '/dashboard/cookies',
+    name: 'Cookies',
+    icon: <IoStarOutline size={30} />,
+  },
+  {
+    href: '/dashboard/cart',
+    name: 'Carrito',
+    icon: <IoCartOutline size={30} />,
   },
 ];
 
