@@ -1,4 +1,4 @@
-import prisma from '@/app/lib/prisma';
+import prisma from '@/lib/prisma';
 import { Todo } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import * as yup from 'yup';

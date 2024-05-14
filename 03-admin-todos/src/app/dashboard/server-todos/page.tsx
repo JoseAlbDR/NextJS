@@ -1,4 +1,4 @@
-import prisma from '@/app/lib/prisma';
+import prisma from '@/lib/prisma';
 import { NewTodo, TodosGrid } from '@/todos';
 import { Metadata } from 'next';
 import React from 'react';
