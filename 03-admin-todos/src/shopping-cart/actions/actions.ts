@@ -10,6 +10,14 @@ export const getCookieCart = (): { [id: string]: number } => {
   return {};
 };
 
+export const removeSingleItemFromCart = (id: string) => {
+  const cookieCart = getCookieCart();
+  if (cookieCart[id]) {
+    cookieCart[id] === 1 ? delete cookieCart[id] : (cookieCart[id] -= 1);
+  }
+  setCookie('cart', JSON.stringify(cookieCart));
+};
+
 export const addProductToCart = (id: string) => {
   const cookieCart = getCookieCart();
   if (cookieCart[id]) {

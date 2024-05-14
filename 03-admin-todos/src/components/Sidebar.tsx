@@ -33,8 +33,8 @@ const sidebarItems = [
     icon: <IoStarOutline size={30} />,
   },
   {
-    href: '/dashboard/cart',
-    name: 'Carrito',
+    href: '/dashboard/products',
+    name: 'Productos',
     icon: <IoCartOutline size={30} />,
   },
 ];
