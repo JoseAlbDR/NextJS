@@ -11,7 +11,7 @@ import {
   IoPersonCircleOutline,
   IoStarOutline,
 } from 'react-icons/io5';
-import { auth } from '../../auth';
+import { auth } from '../../app/auth';
 import LogoutButton from './LogoutButton';
 import { TiUserOutline } from 'react-icons/ti';
 
