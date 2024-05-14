@@ -1,5 +1,4 @@
 import { TabBar } from '@/cookies';
-import { getCookie } from 'cookies-next';
 import { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import React from 'react';
@@ -14,8 +13,6 @@ const tabOptions = [1, 2, 3, 4, 5];
 const CookiesPage = () => {
   const cookieStore = cookies();
   const selectedTab = cookieStore.get('selectedTab');
-
-  console.log({ selectedTab });
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
