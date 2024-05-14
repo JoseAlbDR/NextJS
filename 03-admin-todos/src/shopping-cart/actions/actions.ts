@@ -1,5 +1,5 @@
 import { getCookie, hasCookie, setCookie } from 'cookies-next';
-import { Product } from '../../cart/data/products';
+import { Product } from '../../products/data/products';
 
 export const getCookieCart = (): { [id: string]: number } => {
   if (hasCookie('cart')) {

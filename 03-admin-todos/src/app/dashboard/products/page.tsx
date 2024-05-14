@@ -1,4 +1,4 @@
-import { ProductCard, products } from '@/cart';
+import { ProductCard, products } from '@/products';
 import React from 'react';
 
 const CartPage = () => {

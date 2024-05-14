@@ -6,7 +6,7 @@ import { IoAddCircleOutline, IoRemove } from 'react-icons/io5';
 // import {} from '../actions/actions';
 
 import { useRouter } from 'next/navigation';
-import { Product } from '../../cart/data/products';
+import { Product } from '../../products/data/products';
 import { addProductToCart, removeSingleItemFromCart } from '../actions/actions';
 
 interface Props {

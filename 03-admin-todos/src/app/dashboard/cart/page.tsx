@@ -1,4 +1,4 @@
-import { Product, products } from '@/cart';
+import { Product, products } from '@/products';
 import { WidgetItem } from '@/components';
 import { ItemCard } from '@/shopping-cart/components/ItemCard';
 import { cookies } from 'next/headers';
