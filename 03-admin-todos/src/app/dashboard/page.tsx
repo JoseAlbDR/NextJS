@@ -1,15 +1,11 @@
 import { WidgetItem } from '@/components';
 import React from 'react';
 import SignIn from './components/SignIn';
-import { auth } from '../../../auth';
+import { auth } from '../../auth';
 import { redirect } from 'next/navigation';
 
 const DashboardPage = async () => {
   const session = await auth();
-
-  if (!session) {
-    redirect('/api/auth/signin');
-  }
 
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

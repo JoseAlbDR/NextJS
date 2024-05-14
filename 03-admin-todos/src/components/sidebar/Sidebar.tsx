@@ -8,11 +8,19 @@ import {
   IoCartOutline,
   IoCheckboxOutline,
   IoListOutline,
+  IoPersonCircleOutline,
   IoStarOutline,
 } from 'react-icons/io5';
 import { auth } from '../../auth';
+import LogoutButton from './LogoutButton';
+import { TiUserOutline } from 'react-icons/ti';
 
 const sidebarItems = [
+  {
+    href: '/dashboard/profile',
+    name: 'Perfil',
+    icon: <IoPersonCircleOutline size={30} />,
+  },
   {
     href: '/dashboard',
     name: 'Dashboard',
@@ -59,17 +67,17 @@ const Sidebar = async () => {
 
         <div className="mt-8 text-center">
           <Image
-            src={`${session?.user?.image}`}
+            src={`${session?.user?.image || '/images/profile.jpg'}`}
             alt="user"
             className="w-10 h-10 m-auto rounded-full object-cover lg:w-28 lg:h-28"
             height={115}
             width={115}
           />
           <h5 className="hidden mt-4 text-xl font-semibold text-gray-600 lg:block">
-            {session?.user?.name}
+            {session?.user?.name || 'No name'}
           </h5>
           <span className="hidden text-gray-400 lg:block">
-            {session?.user?.email}
+            {session?.user?.email || 'No email'}
           </span>
         </div>
 
@@ -86,10 +94,7 @@ const Sidebar = async () => {
       </div>
 
       <div className="px-6 -mx-6 pt-4 flex justify-between items-center border-t">
-        <button className="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group">
-          <CiLogout />
-          <span className="group-hover:text-gray-700">Logout</span>
-        </button>
+        <LogoutButton />
       </div>
     </aside>
   );
