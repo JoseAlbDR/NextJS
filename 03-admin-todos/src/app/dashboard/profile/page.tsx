@@ -6,7 +6,7 @@ import React from 'react';
 const ProfilePage = () => {
   const { data: session } = useSession();
 
-  if (!session) redirect('/dashboard/');
+  if (!session) redirect('/api/auth/signin');
 
   return (
     <div>
