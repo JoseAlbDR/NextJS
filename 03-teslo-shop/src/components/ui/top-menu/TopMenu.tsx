@@ -1,7 +1,9 @@
+'use client';
 import React from 'react';
 import Link from 'next/link';
 import { tittleFont } from '@/config/fonts';
 import { IoCartOutline, IoMenuOutline, IoSearchOutline } from 'react-icons/io5';
+import { useStore } from '@/store';
 
 const navLinks = [
   {
@@ -30,13 +32,14 @@ const endLinks = [
     icon: <IoCartOutline className="w.5 h-5" />,
   },
   {
-    href: '/menu',
+    href: '#',
     label: 'Menu',
     icon: <IoMenuOutline className="w.5 h-5" />,
   },
 ];
 
 const TopMenu = () => {
+  const openSideMenu = useStore((state) => state.openSideMenu);
   return (
     <nav className="flex px-4 py-2 justify-between items-center w-full">
       {/* Logo */}
@@ -64,26 +67,27 @@ const TopMenu = () => {
 
       {/* Search, cart, menu */}
       <div className="flex items-center">
-        {endLinks.map((link) =>
-          link.label === 'Carrito' ? (
-            <Link key={link.href} href={link.href} className="mx-2">
-              <div className="relative">
-                <span className="absolute text-xs px-1 rounded-full font-bold -top-2 -right-2 bg-blue-700 text-white ">
-                  3
-                </span>
-                {link.icon}
-              </div>
-            </Link>
-          ) : (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="m-2 p-2 rounded-md transition-all hover:bg-gray-100"
-            >
-              {link.icon}
-            </Link>
-          )
-        )}
+        <Link
+          href="/search"
+          className="m-2 p-2 rounded-md transition-all hover:bg-gray-100"
+        >
+          <IoSearchOutline className="w.5 h-5" />
+        </Link>
+        <Link href="/cart" className="mx-2">
+          <div className="relative">
+            <span className="absolute text-xs px-1 rounded-full font-bold -top-2 -right-2 bg-blue-700 text-white ">
+              3
+            </span>
+            <IoCartOutline className="w.5 h-5" />
+          </div>
+        </Link>
+        <Link
+          href="#"
+          className="m-2 p-2 rounded-md transition-all hover:bg-gray-100"
+          onClick={() => openSideMenu()}
+        >
+          <IoMenuOutline className="w.5 h-5" />
+        </Link>
       </div>
     </nav>
   );
