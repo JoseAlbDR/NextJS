@@ -76,8 +76,8 @@ const Sidebar = async () => {
           <h5 className="hidden mt-4 text-xl font-semibold text-gray-600 lg:block">
             {session?.user?.name || 'No name'}
           </h5>
-          <span className="hidden text-gray-400 lg:block">
-            {session?.user?.email || 'No email'}
+          <span className="hidden text-gray-400 lg:block capitalize">
+            {session?.user?.roles?.join(', ') || 'No roles'}
           </span>
         </div>
 

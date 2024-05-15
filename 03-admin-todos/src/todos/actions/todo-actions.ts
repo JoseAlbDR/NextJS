@@ -15,13 +15,17 @@ export const deleteCompleted = async (): Promise<boolean> => {
   }
 };
 
-export const createTodo = async (formData: FormData): Promise<Todo> => {
+export const createTodo = async (
+  formData: FormData,
+  userId: string
+): Promise<Todo> => {
   const data = Object.fromEntries(formData);
 
   try {
     const todo = await prisma.todo.create({
       data: {
         description: data.description as string,
+        createdBy: userId,
       },
     });
 
@@ -31,6 +35,16 @@ export const createTodo = async (formData: FormData): Promise<Todo> => {
     console.log(error);
     throw 'Error creando todo';
   }
+};
+
+export const getTodos = async (userId: string): Promise<Todo[]> => {
+  const todos = await prisma.todo.findMany({
+    where: {
+      createdBy: userId,
+    },
+  });
+
+  return todos;
 };
 
 export const toggleTodo = async (

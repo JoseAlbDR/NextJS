@@ -3,15 +3,18 @@
 import { useState } from 'react';
 import { IoTrashOutline } from 'react-icons/io5';
 import { createTodo, deleteCompleted } from '../actions/todo-actions';
+import { useSession } from 'next-auth/react';
+import { redirect } from 'next/navigation';
 
 const NewTodo = () => {
   const [description, setDescription] = useState<string>('');
+  const { data: session } = useSession();
 
   return (
     <form
       className="flex w-full"
       action={(formData) => {
-        createTodo(formData);
+        createTodo(formData, session?.user?.id!);
         setDescription('');
       }}
     >
