@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="">
       <h1>Hola mundo</h1>
       <h1 className={tittleFont.className}>Hola Mundo</h1>
     </main>
