@@ -13,7 +13,7 @@ const navLinks = [
     label: 'Mujeres',
   },
   {
-    href: '/category/kid',
+    href: '/category/kids',
     label: 'Niños',
   },
 ];
