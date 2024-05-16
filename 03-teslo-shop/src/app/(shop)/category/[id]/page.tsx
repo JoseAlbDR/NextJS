@@ -1,11 +1,12 @@
 import { ProductGrid, Title } from '@/components';
+import { Category } from '@/interfaces';
 import { initialData } from '@/seed/seed';
 import { notFound } from 'next/navigation';
 import React from 'react';
 
 interface Props {
   params: {
-    id: string;
+    id: Category;
   };
 }
 
@@ -20,10 +21,11 @@ const CategoryPage = ({ params }: Props) => {
     (product) => product.gender === id
   );
 
-  const titles: { [key: string]: string } = {
+  const titles: Record<Category, string> = {
     men: 'Hombres',
     women: 'Mujeres',
     kid: 'Niños',
+    unisex: 'Todos',
   };
 
   return (
