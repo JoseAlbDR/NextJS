@@ -1,4 +1,9 @@
-import { SizeSelector } from '@/components';
+import {
+  MobileSlideShow,
+  ProductSlideShow,
+  QuantitySelector,
+  SizeSelector,
+} from '@/components';
 import { tittleFont } from '@/config/fonts';
 import { initialData } from '@/seed/seed';
 import { notFound } from 'next/navigation';
@@ -17,9 +22,20 @@ const ProductPage = ({ params }: Props) => {
   if (!product) notFound();
 
   return (
-    <div className="mt-5 mb-20 grid md:grid-cols-3 gap-3">
+    <div className="mt-5 mb-20 grid md:grid-cols-3 gap-3 m">
       <div className="col-span-1 md:col-span-2">
-        <h1>Hello there</h1>
+        {/* Mobile Slide Show */}
+        <MobileSlideShow
+          images={product.images}
+          title={product.title}
+          className="block md:hidden"
+        />
+        {/* Slide Show */}
+        <ProductSlideShow
+          images={product.images}
+          title={product.title}
+          className="hidden md:block"
+        />
       </div>
       <div className="col-span-1 px-5 ">
         <h1 className={`${tittleFont.className} antialiased font-bold text-xl`}>
@@ -33,7 +49,7 @@ const ProductPage = ({ params }: Props) => {
           selectedSize={product.sizes[0]}
         />
         {/* Cantidad */}
-
+        <QuantitySelector selectedQuantity={3} />
         {/* Button */}
         <button className="btn-primary my-5">Agregar al carrito</button>
         {/* Description */}
