@@ -70,7 +70,7 @@ const CheckoutPage = () => {
               <span className="mt-5 text-2xl">Total</span>
               <span className="text-right mt-5 text-2xl">$121</span>
             </div>
-            <div>
+            <div className="mt-5 mb-2 w-full">
               <p className="mb-5">
                 <span className="text-xs">
                   Al hacer clic en &quot;Hacer Compra&quot;, aceptas nuestros{' '}
