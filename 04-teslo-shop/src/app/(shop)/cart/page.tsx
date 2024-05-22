@@ -1,16 +1,18 @@
+import React from 'react';
 import { QuantitySelector, Title } from '@/components';
-import { Product } from '@/interfaces';
 import { initialData } from '@/seed/seed';
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
+import { redirect } from 'next/navigation';
+
+const products = [
+  initialData.products[0],
+  initialData.products[1],
+  initialData.products[2],
+];
 
 const CartPage = () => {
-  const products = [
-    initialData.products[0],
-    initialData.products[1],
-    initialData.products[2],
-  ];
+  if (products.length === 0) redirect('/empty');
 
   return (
     <div className="flex justify-center items-center mb-72 px-10 sm:px-0">
