@@ -1,12 +1,19 @@
 import { tittleFont } from '@/config/fonts';
 import Link from 'next/link';
+import React from 'react';
 
-export default function Login() {
+const NewAccount = () => {
   return (
     <div className="flex flex-col min-h-screen pt-32 sm:pt-52">
       <h1 className={`${tittleFont.className} text-4xl mb-5`}>Ingresar</h1>
 
       <div className="flex flex-col">
+        <label htmlFor="name">Nombre Completo</label>
+        <input
+          className="px-5 py-2 border bg-gray-200 rounded mb-5"
+          type="text"
+        />
+
         <label htmlFor="email">Correo electrónico</label>
         <input
           className="px-5 py-2 border bg-gray-200 rounded mb-5"
@@ -19,7 +26,7 @@ export default function Login() {
           type="email"
         />
 
-        <button className="btn-primary">Ingresar</button>
+        <button className="btn-primary">Nueva Cuenta</button>
 
         {/* divisor l ine */}
         <div className="flex items-center my-5">
@@ -28,10 +35,12 @@ export default function Login() {
           <div className="flex-1 border-t border-gray-500"></div>
         </div>
 
-        <Link href="/auth/new-account" className="btn-secondary text-center">
-          Crear una nueva cuenta
+        <Link href="/auth/login" className="btn-secondary text-center">
+          Ingresar
         </Link>
       </div>
     </div>
   );
-}
+};
+
+export default NewAccount;
