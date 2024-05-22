@@ -71,6 +71,20 @@ const CheckoutPage = () => {
               <span className="text-right mt-5 text-2xl">$121</span>
             </div>
             <div>
+              <p className="mb-5">
+                <span className="text-xs">
+                  Al hacer clic en &quot;Hacer Compra&quot;, aceptas nuestros{' '}
+                  <Link href="/terms-and-conditions" className="underline">
+                    Términos y Condiciones{' '}
+                  </Link>
+                  y
+                  <Link href={'/privacy-policy'} className="underline">
+                    {' '}
+                    Políticas de Privacidad.
+                  </Link>
+                </span>
+              </p>
+
               <Link
                 href="/orders/123"
                 className="flex justify-center btn-primary mt-5"
