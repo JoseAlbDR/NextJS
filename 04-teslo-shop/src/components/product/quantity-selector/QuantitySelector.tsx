@@ -26,8 +26,7 @@ const QuantitySelector = ({ selectedQuantity }: Props) => {
   };
 
   return (
-    <div className="my-5">
-      <h3 className="font-semibold mb-4">Cantidad</h3>
+    <div>
       <div className="flex gap-2">
         <button onClick={handleDecrement}>
           <IoRemoveCircleOutline size={30} />

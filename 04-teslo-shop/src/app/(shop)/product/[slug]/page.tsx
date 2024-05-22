@@ -49,6 +49,7 @@ const ProductPage = ({ params }: Props) => {
           selectedSize={product.sizes[0]}
         />
         {/* Cantidad */}
+        <h3 className="font-semibold mb-4">Cantidad</h3>
         <QuantitySelector selectedQuantity={3} />
         {/* Button */}
         <button className="btn-primary my-5">Agregar al carrito</button>
