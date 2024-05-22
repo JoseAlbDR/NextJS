@@ -8,3 +8,4 @@ export { default as SizeSelector } from './product/size-selector/SizeSelector';
 export { default as QuantitySelector } from './product/quantity-selector/QuantitySelector';
 export { default as ProductSlideShow } from './product/slide-show/ProductSlideShow';
 export { default as MobileSlideShow } from './product/slide-show/MobileSlideShow';
+export { default as Footer } from './ui/footer/Footer';

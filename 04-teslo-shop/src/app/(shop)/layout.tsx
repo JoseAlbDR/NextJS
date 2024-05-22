@@ -1,4 +1,4 @@
-import { Sidebar, TopMenu } from '@/components';
+import { Footer, Sidebar, TopMenu } from '@/components';
 import React, { PropsWithChildren } from 'react';
 
 const ShopLayout = ({ children }: PropsWithChildren) => {
@@ -7,6 +7,7 @@ const ShopLayout = ({ children }: PropsWithChildren) => {
       <TopMenu />
       <Sidebar />
       <div className="px-0 sm:px-10">{children}</div>
+      <Footer />
     </main>
   );
 };
