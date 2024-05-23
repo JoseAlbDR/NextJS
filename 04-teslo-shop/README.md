@@ -4,7 +4,9 @@
 
 1. Clonar el repositorio
 2. Instalar dependencias `npm i`
-3. Arrancar la aplicación `npm run dev`
+3. Crear una copia del `.env.template` y renombrarlo a `.env` y cambiar las variables de entorno
+4. Levantar la base de datos `docker compose up -d`
+5. Arrancar la aplicación `npm run dev`
 
 ## Arrancar en prod
 
