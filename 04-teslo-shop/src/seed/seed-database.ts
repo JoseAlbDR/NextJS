@@ -2,7 +2,7 @@ import { ValidSizes, ValidTypes, initialData } from './seed';
 import prisma from '../lib/db';
 
 interface Category {
-  name: string;
+  name: ValidTypes;
 }
 
 interface Product {
@@ -29,18 +29,28 @@ const main = async () => {
     prisma.category.deleteMany(),
   ]);
 
-  const { categories } = initialData.products.reduce(
-    (acc, item) => {
-      const category: Category = { name: item.type };
-      if (!acc.categories.some((c) => c.name === category.name))
-        acc.categories.push(category);
+  // const { categories } = initialData.products.reduce(
+  //   (acc, item) => {
+  //     const category: Category = { name: item.type };
+  //     if (!acc.categories.some((c) => c.name === category.name))
+  //       acc.categories.push(category);
 
-      return acc;
-    },
-    {
-      categories: [] as Category[],
-    }
-  );
+  //     return acc;
+  //   },
+  //   {
+  //     categories: [] as Category[],
+  //   }
+  // );
+
+  // categories.push({ name: 'pants' }
+
+  const cats = ['hoodies', 'pants', 'hats', 'shirts'];
+
+  const categories = cats.reduce((acc, item) => {
+    acc.push({ name: item });
+
+    return acc;
+  }, [] as { name: string }[]);
 
   await prisma.category.createMany({ data: categories });
 
@@ -49,32 +59,20 @@ const main = async () => {
     return acc;
   }, {} as Record<string, string>);
 
-  const products: Product[] = initialData.products.map((product) => {
+  initialData.products.map(async (product) => {
     const { images, type, ...rest } = product;
-    return {
-      ...rest,
-      categoryId: categoryMap[product.type],
-    };
+    await prisma.product.create({
+      data: {
+        ...rest,
+        categoryId: categoryMap[type],
+        Images: {
+          create: images.map((image) => ({
+            url: image,
+          })),
+        },
+      },
+    });
   });
-
-  await prisma.product.createMany({ data: products });
-
-  const insertedProducts = await prisma.product.findMany();
-
-  const images: Image[] = insertedProducts.reduce((acc, product) => {
-    initialData.products
-      .find((p) => p.slug === product.slug)
-      ?.images.forEach((image) => {
-        acc.push({
-          url: image,
-          productId: product.id,
-        });
-      });
-
-    return acc;
-  }, [] as Image[]);
-
-  await prisma.productImage.createMany({ data: images });
 
   console.log('Seed ejecutada');
 };
