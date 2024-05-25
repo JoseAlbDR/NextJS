@@ -1,0 +1,1 @@
+export { generatePagination } from './generatePagination';

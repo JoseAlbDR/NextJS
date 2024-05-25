@@ -9,7 +9,7 @@ interface Props {
 export default async function Home({ searchParams }: Props) {
   const page = searchParams.page ? +searchParams.page : 1;
 
-  const { products, totalPages } = await getProducts({
+  const { products, totalPages, currentPage } = await getProducts({
     page,
   });
 
@@ -19,7 +19,7 @@ export default async function Home({ searchParams }: Props) {
     <main className="">
       <Title title="Tienda" subtitle="Todos los productos" className="mb-2" />
       <ProductGrid products={products} />
-      <Pagination totalPages={totalPages} currentPage={page} />
+      <Pagination totalPages={totalPages} currentPage={currentPage || 1} />
     </main>
   );
 }

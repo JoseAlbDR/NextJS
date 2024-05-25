@@ -52,6 +52,7 @@ export const getProducts = async ({
 
     return {
       products,
+      currentPage: page,
       totalPages: Math.ceil(totalPages / limit),
     };
   } catch (error) {

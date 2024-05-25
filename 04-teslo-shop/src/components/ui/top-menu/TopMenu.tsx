@@ -7,15 +7,15 @@ import { useStore } from '@/store';
 
 const navLinks = [
   {
-    href: '/category/men',
+    href: '/gender/men',
     label: 'Hombres',
   },
   {
-    href: '/category/women',
+    href: '/gender/women',
     label: 'Mujeres',
   },
   {
-    href: '/category/kid',
+    href: '/gender/kid',
     label: 'Niños',
   },
 ];

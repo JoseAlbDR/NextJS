@@ -1,14 +1,12 @@
 import { Pagination, ProductGrid, Title } from '@/components';
 import { Category } from '@/interfaces';
 import { getProducts } from '@/lib';
-import { initialData } from '@/seed/seed';
 import { notFound } from 'next/navigation';
 import React from 'react';
-import page from '../../../../../../nextjs-tutorial/app/drinks/[id]/page';
 
 interface Props {
   params: {
-    id: Category;
+    gender: Category;
   };
   searchParams: {
     [key: string]: string;
@@ -18,10 +16,10 @@ interface Props {
 const allowedParams = ['men', 'women', 'kid'];
 
 const CategoryPage = async ({ params, searchParams }: Props) => {
-  const { id } = params;
+  const { gender } = params;
   const { page = 1 } = searchParams;
 
-  if (!allowedParams.includes(id)) notFound();
+  if (!allowedParams.includes(gender)) notFound();
 
   // const showProducts = initialData.products.filter(
   //   (product) => product.gender === id
@@ -29,7 +27,7 @@ const CategoryPage = async ({ params, searchParams }: Props) => {
 
   const { products: showProducts, totalPages } = await getProducts({
     page: +page || 1,
-    gender: id,
+    gender,
   });
 
   const titles: Record<Category, string> = {
@@ -42,8 +40,8 @@ const CategoryPage = async ({ params, searchParams }: Props) => {
   return (
     <div>
       <Title
-        title={titles[id]}
-        subtitle={`Articulos de ${titles[id]}`}
+        title={titles[gender]}
+        subtitle={`Articulos de ${titles[gender]}`}
         className="mb-2"
       />
       <ProductGrid products={showProducts} />
