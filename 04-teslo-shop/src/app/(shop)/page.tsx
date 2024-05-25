@@ -1,13 +1,25 @@
-import { ProductGrid, Title } from '@/components';
-import { initialData } from '@/seed/seed';
+import { Pagination, ProductGrid, Title } from '@/components';
+import { getProducts } from '@/lib';
+import { redirect } from 'next/navigation';
 
-const products = initialData.products;
+interface Props {
+  searchParams: { [key: string]: string };
+}
 
-export default function Home() {
+export default async function Home({ searchParams }: Props) {
+  const page = searchParams.page ? +searchParams.page : 1;
+
+  const { products, totalPages } = await getProducts({
+    page,
+  });
+
+  if (products.length === 0) redirect('/');
+
   return (
     <main className="">
       <Title title="Tienda" subtitle="Todos los productos" className="mb-2" />
       <ProductGrid products={products} />
+      <Pagination totalPages={totalPages} currentPage={page} />
     </main>
   );
 }

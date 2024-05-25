@@ -9,3 +9,4 @@ export { default as QuantitySelector } from './product/quantity-selector/Quantit
 export { default as ProductSlideShow } from './product/slide-show/ProductSlideShow';
 export { default as MobileSlideShow } from './product/slide-show/MobileSlideShow';
 export { default as Footer } from './ui/footer/Footer';
+export { default as Pagination } from './pagination/Pagination';
