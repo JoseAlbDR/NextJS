@@ -1,5 +1,5 @@
 'use client';
-import { useStore } from '@/store';
+import { useUIStore } from '@/store';
 import clsx from 'clsx';
 import Link from 'next/link';
 import React from 'react';
@@ -15,8 +15,8 @@ import {
 } from 'react-icons/io5';
 
 const Sidebar = () => {
-  const isSideMenuOpen = useStore((state) => state.isSideMenuOpen);
-  const closeSideMenu = useStore((state) => state.closeSideMenu);
+  const isSideMenuOpen = useUIStore((state) => state.isSideMenuOpen);
+  const closeSideMenu = useUIStore((state) => state.closeSideMenu);
 
   return (
     <div className="">

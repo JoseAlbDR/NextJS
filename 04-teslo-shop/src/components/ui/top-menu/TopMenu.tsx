@@ -3,7 +3,8 @@ import React from 'react';
 import Link from 'next/link';
 import { tittleFont } from '@/config/fonts';
 import { IoCartOutline, IoMenuOutline, IoSearchOutline } from 'react-icons/io5';
-import { useStore } from '@/store';
+import { useUIStore } from '@/store';
+import { useCartStore } from '@/store/cart/cart-store';
 
 const navLinks = [
   {
@@ -39,7 +40,15 @@ const endLinks = [
 ];
 
 const TopMenu = () => {
-  const openSideMenu = useStore((state) => state.openSideMenu);
+  const openSideMenu = useUIStore((state) => state.openSideMenu);
+  const cart = useCartStore((state) => state.cart);
+
+  const cartQuantity = cart.reduce((acc, product) => {
+    acc += product.quantity;
+
+    return acc;
+  }, 0);
+
   return (
     <nav className="flex px-4 py-2 justify-between items-center w-full">
       {/* Logo */}
@@ -76,7 +85,7 @@ const TopMenu = () => {
         <Link href="/cart" className="mx-2">
           <div className="relative">
             <span className="absolute text-xs px-1 rounded-full font-bold -top-2 -right-2 bg-blue-700 text-white ">
-              3
+              {cartQuantity}
             </span>
             <IoCartOutline className="w.5 h-5" />
           </div>

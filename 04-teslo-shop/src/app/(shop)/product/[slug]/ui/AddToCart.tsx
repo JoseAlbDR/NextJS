@@ -1,7 +1,7 @@
 'use client';
 import { SizeSelector, QuantitySelector } from '@/components';
-import { Size } from '@/interfaces';
-import { Product } from '@prisma/client';
+import { Product, Size } from '@/interfaces';
+import { useCartStore } from '@/store';
 import React, { useState } from 'react';
 
 interface Props {
@@ -11,7 +11,24 @@ interface Props {
 const AddToCart = ({ product }: Props) => {
   const [size, setSize] = useState<Size | undefined>();
   const [quantity, setQuantity] = useState<number>(1);
+  const [sizeError, setSizeError] = useState<string>('');
+  const addProductToCart = useCartStore((state) => state.addProductToCart);
 
+  const addToCart = () => {
+    if (!size) return setSizeError('Por favor selecciona una talla');
+
+    addProductToCart({
+      id: product.id,
+      image: product.images[0],
+      price: product.price,
+      quantity: quantity,
+      size: size,
+      slug: product.slug,
+      title: product.title,
+    });
+
+    setSizeError('');
+  };
   return (
     <>
       {/* Tallas */}
@@ -20,6 +37,7 @@ const AddToCart = ({ product }: Props) => {
         selectedSize={size}
         onSizeChanged={setSize}
       />
+      {sizeError && <p className="text-red-500 mb-4 -mt-4">{sizeError}</p>}
       {/* Cantidad */}
       <h3 className="font-semibold mb-4">Cantidad</h3>
       <QuantitySelector
@@ -28,7 +46,9 @@ const AddToCart = ({ product }: Props) => {
         stock={product.inStock}
       />
       {/* Button */}
-      <button className="btn-primary my-5">Agregar al carrito</button>
+      <button className="btn-primary my-5" onClick={addToCart}>
+        Agregar al carrito
+      </button>
     </>
   );
 };

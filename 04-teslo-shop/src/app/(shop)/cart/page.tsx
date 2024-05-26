@@ -39,7 +39,7 @@ const CartPage = () => {
                 <div>
                   <p>{product.title}</p>
                   <p>${product.price}</p>
-                  <QuantitySelector selectedQuantity={3} />
+                  {/* <QuantitySelector quantity={} stock={product.inStock}/> */}
                   <button className="underline mt-3">Remover</button>
                 </div>
               </div>

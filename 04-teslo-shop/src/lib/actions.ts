@@ -29,7 +29,9 @@ export const getStockBySlug = async ({ slug }: SlugPayload) => {
   }
 };
 
-export const getProduct = async ({ slug }: SlugPayload) => {
+export const getProduct = async ({
+  slug,
+}: SlugPayload): Promise<Product | null> => {
   try {
     const product = await prisma.product.findUnique({
       where: { slug },
@@ -44,6 +46,7 @@ export const getProduct = async ({ slug }: SlugPayload) => {
     return {
       ...product,
       images: product.images.map((image) => image.url),
+      type: product.category.name as Type,
     };
   } catch (error) {
     console.log(error);
