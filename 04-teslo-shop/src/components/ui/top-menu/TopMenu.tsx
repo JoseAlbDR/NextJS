@@ -43,6 +43,8 @@ const endLinks = [
 const TopMenu = () => {
   const openSideMenu = useUIStore((state) => state.openSideMenu);
   const cartQuantity = useCartStore((state) => state.getTotalItems());
+
+  //! TO SOLVE HIDRATION PROBLEM FROM LOCAL STORAGE CART
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
