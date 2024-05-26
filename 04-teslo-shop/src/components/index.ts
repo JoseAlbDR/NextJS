@@ -10,3 +10,6 @@ export { default as ProductSlideShow } from './product/slide-show/ProductSlideSh
 export { default as MobileSlideShow } from './product/slide-show/MobileSlideShow';
 export { default as Footer } from './ui/footer/Footer';
 export { default as Pagination } from './ui/pagination/Pagination';
+export { default as PageNotFound } from './ui/not-found/PageNotFound';
+export { default as StockLabel } from './product/stock-label/StockLabel';
+export { default as StockLabelSkeleton } from './ui/skeletons/StockLabelSkeleton';

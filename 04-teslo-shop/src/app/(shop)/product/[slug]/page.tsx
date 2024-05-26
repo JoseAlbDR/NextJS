@@ -1,13 +1,16 @@
+export const revalidate = 10080; // 1 week
+import React, { Suspense } from 'react';
 import {
   MobileSlideShow,
   ProductSlideShow,
   QuantitySelector,
   SizeSelector,
+  StockLabel,
+  StockLabelSkeleton,
 } from '@/components';
 import { tittleFont } from '@/config/fonts';
-import { initialData } from '@/seed/seed';
+import { getProduct } from '@/lib/actions';
 import { notFound } from 'next/navigation';
-import React from 'react';
 
 interface Props {
   params: {
@@ -15,9 +18,9 @@ interface Props {
   };
 }
 
-const ProductPage = ({ params }: Props) => {
+const ProductPage = async ({ params }: Props) => {
   const { slug } = params;
-  const product = initialData.products.find((product) => product.slug === slug);
+  const product = await getProduct({ slug });
 
   if (!product) notFound();
 
@@ -38,6 +41,10 @@ const ProductPage = ({ params }: Props) => {
         />
       </div>
       <div className="col-span-1 px-5 ">
+        <Suspense fallback={<StockLabelSkeleton />}>
+          <StockLabel slug={product.slug} />
+        </Suspense>
+
         <h1 className={`${tittleFont.className} antialiased font-bold text-xl`}>
           {product.title}
         </h1>
@@ -50,7 +57,7 @@ const ProductPage = ({ params }: Props) => {
         />
         {/* Cantidad */}
         <h3 className="font-semibold mb-4">Cantidad</h3>
-        <QuantitySelector selectedQuantity={3} />
+        <QuantitySelector selectedQuantity={1} />
         {/* Button */}
         <button className="btn-primary my-5">Agregar al carrito</button>
         {/* Description */}

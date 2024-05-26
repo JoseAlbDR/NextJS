@@ -9,6 +9,48 @@ interface GetProductsPayload {
   gender?: 'men' | 'women' | 'kid' | 'unisex';
 }
 
+interface SlugPayload {
+  slug: string;
+}
+
+export const getStockBySlug = async ({ slug }: SlugPayload) => {
+  try {
+    const product = await prisma.product.findUnique({
+      where: { slug },
+      select: {
+        inStock: true,
+      },
+    });
+    if (!product) return 0;
+    return product.inStock;
+  } catch (error) {
+    console.log(error);
+    throw new Error('Error al obtener stock por slug');
+  }
+};
+
+export const getProduct = async ({ slug }: SlugPayload) => {
+  try {
+    const product = await prisma.product.findUnique({
+      where: { slug },
+      include: {
+        images: { select: { url: true } },
+        category: { select: { name: true } },
+      },
+    });
+
+    if (!product) return null;
+
+    return {
+      ...product,
+      images: product.images.map((image) => image.url),
+    };
+  } catch (error) {
+    console.log(error);
+    throw new Error('Error al obtener producto por slug');
+  }
+};
+
 export const getProducts = async ({
   page = 1,
   limit = 12,
@@ -30,8 +72,8 @@ export const getProducts = async ({
       prisma.product.findMany({
         where: whereClause,
         include: {
-          Images: { select: { url: true } },
-          Category: { select: { name: true } },
+          images: { select: { url: true } },
+          category: { select: { name: true } },
         },
         take: limit,
         skip,
@@ -43,8 +85,8 @@ export const getProducts = async ({
     const products = data.reduce((acc, item) => {
       const product: Product = {
         ...item,
-        images: item.Images.map((image) => image.url),
-        type: item.Category.name as Type,
+        images: item.images.map((image) => image.url),
+        type: item.category.name as Type,
       };
       acc.push(product);
       return acc;
@@ -57,6 +99,6 @@ export const getProducts = async ({
     };
   } catch (error) {
     console.log(error);
-    return { products: [], totalPages: 0 };
+    return { products: [], totalPages: 0, currentPage: 1 };
   }
 };
