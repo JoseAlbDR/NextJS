@@ -3,10 +3,13 @@ import { useCartStore } from '@/store';
 import React, { useEffect, useState } from 'react';
 import ProductItem from './ProductItem';
 import { FaSpinner } from 'react-icons/fa';
+import { redirect } from 'next/navigation';
 
 const ProductList = () => {
   const [loaded, setIsLoaded] = useState(false);
   const products = useCartStore((state) => state.cart);
+
+  if (products.length === 0) redirect('/empty');
 
   useEffect(() => {
     setIsLoaded(true);
