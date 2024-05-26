@@ -9,11 +9,9 @@ const ProductList = () => {
   const [loaded, setIsLoaded] = useState(false);
   const products = useCartStore((state) => state.cart);
 
-  if (products.length === 0) redirect('/empty');
-
   useEffect(() => {
     setIsLoaded(true);
-  }, [loaded]);
+  }, [loaded, products]);
 
   return !loaded ? (
     <FaSpinner size={50} className="animate-spin" />

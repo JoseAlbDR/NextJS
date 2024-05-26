@@ -1,14 +1,16 @@
 'use client';
 import { useCartStore } from '@/store';
+import { currencyFormat } from '@/utils';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { FaSpinner } from 'react-icons/fa';
 
 const Checkout = () => {
   const [loaded, setLoaded] = useState(false);
-  const totalProducts = +useCartStore((state) => state.getTotalItems());
-  const totalPrice = +useCartStore((state) => state.getTotalPrice()).toFixed(2);
-  const tax = (totalPrice * 0.21).toFixed(2);
+
+  const { subtotal, total, tax, totalProducts } = useCartStore((state) =>
+    state.getSummaryInformation()
+  );
 
   useEffect(() => {
     setLoaded(true);
@@ -27,12 +29,12 @@ const Checkout = () => {
             <span>No. Productos</span>
             <span className="text-right">{totalProducts} artículos</span>
             <span>Subtotal</span>
-            <span className="text-right">${totalPrice}</span>
+            <span className="text-right">{currencyFormat(subtotal)}</span>
             <span>IVA (21%)</span>
-            <span className="text-right ">${tax}</span>
+            <span className="text-right ">{currencyFormat(tax)}</span>
             <span className="mt-5 text-2xl">Total</span>
             <span className="text-right mt-5 text-2xl">
-              ${(Number(totalPrice) + Number(tax)).toFixed(2)}
+              {currencyFormat(total)}
             </span>
           </div>
           <div className="mt-5 mb-2 w-full">

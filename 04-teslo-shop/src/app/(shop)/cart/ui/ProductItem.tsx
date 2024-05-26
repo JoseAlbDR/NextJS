@@ -2,6 +2,7 @@
 import { QuantitySelector } from '@/components';
 import { CartProduct } from '@/interfaces';
 import { useCartStore } from '@/store';
+import { currencyFormat } from '@/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react';
@@ -28,24 +29,23 @@ const ProductItem = ({ product }: Props) => {
         alt={product.title}
         className="mr-5 rounded"
       />
-      <div>
+      <div className="flex flex-col gap-2">
         <Link
           href={`/product/${product.slug}`}
           className="hover:text-blue-500 underline hover:cursor-pointer"
         >
-          {product.title}
+          {product.size} - {product.title}
         </Link>
         <p>
-          ${product.price} x {product.quantity}
+          {currencyFormat(product.price)} x {product.quantity}
         </p>
-        <p>{product.size}</p>
 
         <QuantitySelector
           quantity={product.quantity}
           onQuantityChanged={(value) => changeProductQuantity(product, value)}
         />
         <button
-          className="underline mt-3"
+          className="underline mt-3 self-start"
           onClick={() => removeProductFromCart(product)}
         >
           Remover

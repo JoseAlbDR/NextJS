@@ -13,6 +13,7 @@ import { getProduct } from '@/lib/actions';
 import { notFound } from 'next/navigation';
 import { title } from 'process';
 import AddToCart from './ui/AddToCart';
+import { currencyFormat } from '@/utils';
 
 interface Props {
   params: {
@@ -73,7 +74,7 @@ const ProductPage = async ({ params }: Props) => {
         <h1 className={`${tittleFont.className} antialiased font-bold text-xl`}>
           {product.title}
         </h1>
-        <p className="text-lg mb-5">${product.price}</p>
+        <p className="text-lg mb-5">{currencyFormat(product.price)}</p>
 
         <AddToCart product={product} />
 
