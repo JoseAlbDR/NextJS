@@ -11,12 +11,36 @@ import {
 import { tittleFont } from '@/config/fonts';
 import { getProduct } from '@/lib/actions';
 import { notFound } from 'next/navigation';
+import { title } from 'process';
 
 interface Props {
   params: {
     slug: string;
   };
 }
+
+export const generateMetadata = async ({ params }: Props) => {
+  try {
+    const product = await getProduct({ slug: params.slug });
+
+    if (!product) throw new Error('No se encuentra el producto');
+
+    return {
+      title: product?.title,
+      description: product?.description,
+      openGraph: {
+        title: product?.title,
+        description: product?.description,
+        images: [`/proucts/${product?.images[1]}`],
+      },
+    };
+  } catch (error) {
+    return {
+      title: 'Producto',
+      description: 'Página de producto',
+    };
+  }
+};
 
 const ProductPage = async ({ params }: Props) => {
   const { slug } = params;
