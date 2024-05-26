@@ -14,6 +14,9 @@ const ProductItem = ({ product }: Props) => {
   const changeProductQuantity = useCartStore(
     (state) => state.changeProductQuantity
   );
+  const removeProductFromCart = useCartStore(
+    (state) => state.removeProductFromCart
+  );
 
   return (
     <>
@@ -41,7 +44,12 @@ const ProductItem = ({ product }: Props) => {
           quantity={product.quantity}
           onQuantityChanged={(value) => changeProductQuantity(product, value)}
         />
-        <button className="underline mt-3">Remover</button>
+        <button
+          className="underline mt-3"
+          onClick={() => removeProductFromCart(product)}
+        >
+          Remover
+        </button>
       </div>
     </>
   );
