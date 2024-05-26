@@ -1,35 +1,51 @@
 import { CartProduct } from '@/interfaces';
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 interface State {
   cart: CartProduct[];
 
-  // addProductToCart
+  getTotalItems: () => number;
   addProductToCart: (product: CartProduct) => void;
   // updateProductQuantity
   //
 }
 
-export const useCartStore = create<State>((set, get) => ({
-  cart: [],
-  // addProductToCart: (product) =>
-  //   set((state) => ({ cart: [...state.cart, product] })),
-  addProductToCart: (product) => {
-    const { cart } = get();
+export const useCartStore = create<State>()(
+  persist(
+    (set, get) => ({
+      cart: [],
+      getTotalItems: () => {
+        const { cart } = get();
+        const totalItems = cart.reduce(
+          (acc, product) => acc + product.quantity,
+          0
+        );
+        return totalItems;
+      },
 
-    const productInCart = cart.some(
-      (item) => item.id === product.id && item.size === product.size
-    );
+      addProductToCart: (product) => {
+        const { cart } = get();
 
-    if (!productInCart) return set({ cart: [...cart, product] });
+        const productInCart = cart.some(
+          (item) => item.id === product.id && item.size === product.size
+        );
 
-    const updatedCartProduct = cart.map((item) => {
-      if (item.id === product.id && item.size === product.size)
-        return { ...item, quantity: item.quantity + product.quantity };
+        if (!productInCart) return set({ cart: [...cart, product] });
 
-      return item;
-    });
+        const updatedCartProduct = cart.map((item) => {
+          if (item.id === product.id && item.size === product.size)
+            return { ...item, quantity: item.quantity + product.quantity };
 
-    set({ cart: updatedCartProduct });
-  },
-}));
+          return item;
+        });
+
+        set({ cart: updatedCartProduct });
+      },
+    }),
+    {
+      name: 'shopping-cart',
+      // skipHydration: true
+    }
+  )
+);

@@ -12,6 +12,7 @@ const AddToCart = ({ product }: Props) => {
   const [size, setSize] = useState<Size | undefined>();
   const [quantity, setQuantity] = useState<number>(1);
   const [sizeError, setSizeError] = useState<string>('');
+
   const addProductToCart = useCartStore((state) => state.addProductToCart);
 
   const addToCart = () => {
@@ -28,6 +29,8 @@ const AddToCart = ({ product }: Props) => {
     });
 
     setSizeError('');
+    setQuantity(1);
+    setSize(undefined);
   };
   return (
     <>
