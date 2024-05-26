@@ -15,6 +15,34 @@ interface Props {
   };
 }
 
+export const generateMetadata = async ({ params }: Props) => {
+  try {
+    const genderMap = {
+      men: 'Hombres',
+      women: 'Mujeres',
+      kid: 'Niños',
+      unisex: 'Todos',
+    };
+
+    const gender = genderMap[params.gender];
+
+    return {
+      title: `Ropa de ${gender}`,
+      description: `Página de productos de ${gender}`,
+      openGraph: {
+        title: `Ropa de ${gender}`,
+        description: `Página de productos de ${gender}`,
+        // images: [`/proucts/${product?.images[1]}`],
+      },
+    };
+  } catch (error) {
+    return {
+      title: 'Producto',
+      description: 'Página de producto',
+    };
+  }
+};
+
 const allowedParams = ['men', 'women', 'kid'];
 
 const CategoryPage = async ({ params, searchParams }: Props) => {

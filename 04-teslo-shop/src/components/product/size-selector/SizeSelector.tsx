@@ -3,11 +3,16 @@ import clsx from 'clsx';
 import React from 'react';
 
 interface Props {
-  selectedSize: Size;
+  selectedSize: Size | undefined;
   avaliableSizes: Size[];
+  onSizeChanged: (size: Size) => void;
 }
 
-const SizeSelector = ({ selectedSize, avaliableSizes }: Props) => {
+const SizeSelector = ({
+  selectedSize,
+  avaliableSizes,
+  onSizeChanged,
+}: Props) => {
   return (
     <div className="my-5">
       <h3 className="font-semibold mb-4">Tallas Disponibles</h3>
@@ -18,6 +23,7 @@ const SizeSelector = ({ selectedSize, avaliableSizes }: Props) => {
             className={clsx('mx-2 hover:underline text-lg', {
               underline: size === selectedSize,
             })}
+            onClick={() => onSizeChanged(size)}
           >
             {size}
           </button>

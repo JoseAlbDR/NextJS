@@ -3,25 +3,25 @@ import React, { useState } from 'react';
 import { IoAddCircleOutline, IoRemoveCircleOutline } from 'react-icons/io5';
 
 interface Props {
-  selectedQuantity: number;
+  quantity: number;
+  stock: number;
+  onQuantityChanged: (quantity: number) => void;
 }
 
-const QuantitySelector = ({ selectedQuantity }: Props) => {
-  const [quantity, setQuantity] = useState<number>(selectedQuantity);
-
+const QuantitySelector = ({ quantity, onQuantityChanged, stock }: Props) => {
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setQuantity(Number(event.target.value));
+    onQuantityChanged(Number(event.target.value));
   };
 
   const handleIncrement = () => {
-    if (quantity < 10) {
-      setQuantity(quantity + 1);
+    if (quantity < stock) {
+      onQuantityChanged(quantity + 1);
     }
   };
 
   const handleDecrement = () => {
     if (quantity > 1) {
-      setQuantity(quantity - 1);
+      onQuantityChanged(quantity - 1);
     }
   };
 
@@ -36,7 +36,7 @@ const QuantitySelector = ({ selectedQuantity }: Props) => {
           onChange={handleSelectChange}
           value={quantity}
         >
-          {Array.from({ length: 10 }, (_, i) => i + 1).map((i) => (
+          {Array.from({ length: stock }, (_, i) => i + 1).map((i) => (
             <option key={i} value={i}>
               {i}
             </option>
