@@ -1,8 +1,10 @@
 'use client';
+
 import { authenticate } from '@/lib/actions';
 import clsx from 'clsx';
 import Link from 'next/link';
-import React from 'react';
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { BsExclamationCircle } from 'react-icons/bs';
 
@@ -16,6 +18,7 @@ const LoginButton = () => {
         'btn-disabled': pending,
       })}
       aria-disabled={pending}
+      disabled={pending}
       type="submit"
     >
       Ingresar
@@ -24,7 +27,7 @@ const LoginButton = () => {
 };
 
 const LoginForm = () => {
-  const [errorMessage, dispatch] = useFormState(authenticate, undefined);
+  const [state, dispatch] = useFormState(authenticate, undefined);
 
   return (
     <form className="flex flex-col" action={dispatch}>
@@ -49,10 +52,10 @@ const LoginForm = () => {
         aria-live="polite"
         aria-atomic="true"
       >
-        {errorMessage && (
+        {state && (
           <>
             <BsExclamationCircle className="h-5 w-5 text-red-500" />
-            <p className="text-sm text-red-500">{errorMessage}</p>
+            <p className="text-sm text-red-500">{state}</p>
           </>
         )}
       </div>

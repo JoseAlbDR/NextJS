@@ -109,14 +109,16 @@ export const getProducts = async ({
   }
 };
 
-export async function authenticate(
+export const authenticate = async (
   prevState: string | undefined,
   formData: FormData
-) {
+) => {
   try {
-    await sleep(2000);
+    // await sleep(3000);
     await signIn('credentials', formData);
+    return undefined;
   } catch (error) {
+    // console.log(error);
     if (error instanceof AuthError) {
       switch (error.type) {
         case 'CredentialsSignin':
@@ -127,4 +129,4 @@ export async function authenticate(
     }
     throw error;
   }
-}
+};

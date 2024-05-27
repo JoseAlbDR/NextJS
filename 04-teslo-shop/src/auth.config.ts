@@ -1,5 +1,4 @@
-import type { NextAuthConfig } from 'next-auth';
-import NextAuth from 'next-auth';
+import NextAuth, { NextAuthConfig } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import { prisma } from './lib';
@@ -12,17 +11,16 @@ export const authConfig: NextAuthConfig = {
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user;
-      const isOnDashboard = nextUrl.pathname.startsWith('/');
+      const privateRoutes = ['/profile'];
 
-      console.log({ isLoggedIn });
-      console.log({ isOnDashboard });
-      if (isOnDashboard) {
+      const isLoggedIn = !!auth?.user;
+      const isPrivateRoute = privateRoutes.includes(nextUrl.pathname);
+
+      if (isPrivateRoute) {
         if (isLoggedIn) return true;
         return false; // Redirect unauthenticated users to login page
-      } else if (isLoggedIn) {
-        return Response.redirect(new URL('/', nextUrl));
       }
+
       return true;
     },
   },
@@ -34,22 +32,18 @@ export const authConfig: NextAuthConfig = {
           .safeParse(credentials);
 
         if (!parsedCredentials.success) return null;
-
         const { email, password } = parsedCredentials.data;
 
-        console.log({ email, password });
-        const user = await prisma.user.findUnique({
-          where: {
-            email,
-          },
-        });
+        const user = await prisma.user.findUnique({ where: { email } });
         if (!user) return null;
 
-        if (!bcrypt.compareSync(password, user.password ?? '')) return null;
+        const isPasswordValid = bcrypt.compareSync(
+          password,
+          user.password ?? ''
+        );
+        if (!isPasswordValid) return null;
 
         const { password: _, ...rest } = user;
-
-        console.log({ rest });
 
         return rest;
       },
@@ -57,4 +51,4 @@ export const authConfig: NextAuthConfig = {
   ],
 };
 
-export const { signIn, signOut, auth: middleware } = NextAuth(authConfig);
+export const { signIn, signOut, auth } = NextAuth(authConfig);
