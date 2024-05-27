@@ -4,6 +4,7 @@ import prisma from './db';
 import { Prisma } from '@prisma/client';
 import { signIn } from '@/auth.config';
 import { AuthError } from 'next-auth';
+import { sleep } from '@/utils';
 
 interface GetProductsPayload {
   page?: number;
@@ -113,6 +114,7 @@ export async function authenticate(
   formData: FormData
 ) {
   try {
+    await sleep(2000);
     await signIn('credentials', formData);
   } catch (error) {
     if (error instanceof AuthError) {

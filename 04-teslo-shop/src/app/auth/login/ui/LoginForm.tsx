@@ -1,13 +1,30 @@
 'use client';
 import { authenticate } from '@/lib/actions';
+import clsx from 'clsx';
 import Link from 'next/link';
 import React from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { BsExclamationCircle } from 'react-icons/bs';
 
+const LoginButton = () => {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      className={clsx({
+        'btn-primary': !pending,
+        'btn-disabled': pending,
+      })}
+      aria-disabled={pending}
+      type="submit"
+    >
+      Ingresar
+    </button>
+  );
+};
+
 const LoginForm = () => {
   const [errorMessage, dispatch] = useFormState(authenticate, undefined);
-  const { pending } = useFormStatus();
 
   return (
     <form className="flex flex-col" action={dispatch}>
@@ -25,9 +42,7 @@ const LoginForm = () => {
         name="password"
       />
 
-      <button className="btn-primary" type="submit" aria-disabled={pending}>
-        Ingresar
-      </button>
+      <LoginButton />
 
       <div
         className="flex h-8 items-end space-x-1"
