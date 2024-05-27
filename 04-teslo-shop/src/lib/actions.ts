@@ -2,6 +2,8 @@
 import { Product, Type } from '@/interfaces';
 import prisma from './db';
 import { Prisma } from '@prisma/client';
+import { signIn } from '@/auth.config';
+import { AuthError } from 'next-auth';
 
 interface GetProductsPayload {
   page?: number;
@@ -105,3 +107,22 @@ export const getProducts = async ({
     return { products: [], totalPages: 0, currentPage: 1 };
   }
 };
+
+export async function authenticate(
+  prevState: string | undefined,
+  formData: FormData
+) {
+  try {
+    await signIn('credentials', formData);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return 'Invalid credentials.';
+        default:
+          return 'Something went wrong.';
+      }
+    }
+    throw error;
+  }
+}

@@ -27,6 +27,7 @@ const main = async () => {
     prisma.productImage.deleteMany(),
     prisma.product.deleteMany(),
     prisma.category.deleteMany(),
+    prisma.user.deleteMany(),
   ]);
 
   // const { categories } = initialData.products.reduce(
@@ -43,6 +44,10 @@ const main = async () => {
   // );
 
   // categories.push({ name: 'pants' }
+
+  await prisma.user.createMany({
+    data: initialData.users,
+  });
 
   const cats = ['hoodies', 'pants', 'hats', 'shirts'];
 
@@ -65,7 +70,7 @@ const main = async () => {
       data: {
         ...rest,
         categoryId: categoryMap[type],
-        Images: {
+        images: {
           create: images.map((image) => ({
             url: image,
           })),
