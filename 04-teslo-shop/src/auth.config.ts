@@ -21,8 +21,13 @@ export const authConfig: NextAuthConfig = {
       if (isPrivateRoute) {
         if (isLoggedIn) return true;
         return false; // Redirect unauthenticated users to login page
-      } else if (isLoginRoute && isLoggedIn)
-        return Response.redirect(new URL('/', nextUrl));
+      } else if (isLoginRoute && isLoggedIn) {
+        console.log({ nextUrl });
+        const callbackUrl = nextUrl.searchParams.get('callbackUrl') || '/';
+        const page = nextUrl.searchParams.get('page') || '';
+        const url = page ? `${callbackUrl}?page=${page}` : callbackUrl;
+        return Response.redirect(new URL(url, nextUrl));
+      }
 
       return true;
     },

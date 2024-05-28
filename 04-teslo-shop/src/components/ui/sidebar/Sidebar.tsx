@@ -4,7 +4,7 @@ import { logout } from '@/lib/actions';
 import { useUIStore } from '@/store';
 import clsx from 'clsx';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 import React from 'react';
 import {
@@ -23,8 +23,13 @@ const Sidebar = () => {
   const closeSideMenu = useUIStore((state) => state.closeSideMenu);
 
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  console.log({ pathname });
+  const page = searchParams.get('page') || '';
+
+  const callbackUrl = page ? `${pathname}?page=${page}` : pathname;
+
+  console.log({ callbackUrl });
 
   return (
     <div className="">
@@ -81,7 +86,7 @@ const Sidebar = () => {
           <span className="ml-3 text-xl">Ordenes</span>
         </Link>
         <Link
-          href={`/auth/login?callbackUrl=${pathname}`}
+          href={`/auth/login?callbackUrl=${callbackUrl}`}
           className="flex items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all"
           onClick={() => closeSideMenu()}
         >
