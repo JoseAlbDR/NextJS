@@ -12,14 +12,17 @@ export const authConfig: NextAuthConfig = {
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const privateRoutes = ['/profile'];
+      const loginRoute = '/auth/login';
 
       const isLoggedIn = !!auth?.user;
       const isPrivateRoute = privateRoutes.includes(nextUrl.pathname);
+      const isLoginRoute = loginRoute === nextUrl.pathname;
 
       if (isPrivateRoute) {
         if (isLoggedIn) return true;
         return false; // Redirect unauthenticated users to login page
-      }
+      } else if (isLoginRoute && isLoggedIn)
+        return Response.redirect(new URL('/', nextUrl));
 
       return true;
     },

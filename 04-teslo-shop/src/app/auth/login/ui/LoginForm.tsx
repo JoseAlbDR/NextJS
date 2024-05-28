@@ -3,7 +3,7 @@
 import { authenticate } from '@/lib/actions';
 import clsx from 'clsx';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { BsExclamationCircle } from 'react-icons/bs';
@@ -27,7 +27,14 @@ const LoginButton = () => {
 };
 
 const LoginForm = () => {
-  const [state, dispatch] = useFormState(authenticate, undefined);
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '/';
+  console.log({ callbackUrl });
+  const [state, dispatch] = useFormState(
+    (state: string | undefined, formData: FormData) =>
+      authenticate(state, formData, callbackUrl),
+    undefined
+  );
 
   return (
     <form className="flex flex-col" action={dispatch}>

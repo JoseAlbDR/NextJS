@@ -1,8 +1,11 @@
 'use client';
 
+import { logout } from '@/lib/actions';
 import { useUIStore } from '@/store';
 import clsx from 'clsx';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
 import React from 'react';
 import {
   IoCloseOutline,
@@ -18,6 +21,10 @@ import {
 const Sidebar = () => {
   const isSideMenuOpen = useUIStore((state) => state.isSideMenuOpen);
   const closeSideMenu = useUIStore((state) => state.closeSideMenu);
+
+  const pathname = usePathname();
+
+  console.log({ pathname });
 
   return (
     <div className="">
@@ -59,7 +66,7 @@ const Sidebar = () => {
         </div>
         {/* Menu */}
         <Link
-          href={'/private/profile'}
+          href={'/profile'}
           className="flex items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all"
           onClick={() => closeSideMenu()}
         >
@@ -74,7 +81,7 @@ const Sidebar = () => {
           <span className="ml-3 text-xl">Ordenes</span>
         </Link>
         <Link
-          href={'/auth/login'}
+          href={`/auth/login?callbackUrl=${pathname}`}
           className="flex items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all"
           onClick={() => closeSideMenu()}
         >
@@ -85,6 +92,7 @@ const Sidebar = () => {
           className="w-full flex items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all"
           onClick={() => {
             closeSideMenu();
+            logout();
           }}
         >
           <IoLogOutOutline size={30} />

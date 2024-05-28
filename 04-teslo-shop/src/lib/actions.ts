@@ -2,7 +2,7 @@
 import { Product, Type } from '@/interfaces';
 import prisma from './db';
 import { Prisma } from '@prisma/client';
-import { signIn } from '@/auth.config';
+import { signIn, signOut } from '@/auth.config';
 import { AuthError } from 'next-auth';
 import { sleep } from '@/utils';
 
@@ -111,22 +111,30 @@ export const getProducts = async ({
 
 export const authenticate = async (
   prevState: string | undefined,
-  formData: FormData
+  formData: FormData,
+  callbackUrl: string
 ) => {
   try {
     // await sleep(3000);
-    await signIn('credentials', formData);
+    await signIn('credentials', {
+      ...Object.fromEntries(formData),
+      redirectTo: callbackUrl || '/',
+    });
     return undefined;
   } catch (error) {
     // console.log(error);
     if (error instanceof AuthError) {
       switch (error.type) {
         case 'CredentialsSignin':
-          return 'Invalid credentials.';
+          return 'Credenciales invalidas.';
         default:
-          return 'Something went wrong.';
+          return 'Algo fue mal...inténtelo más tarde';
       }
     }
     throw error;
   }
+};
+
+export const logout = async () => {
+  await signOut({ redirectTo: '/' });
 };
