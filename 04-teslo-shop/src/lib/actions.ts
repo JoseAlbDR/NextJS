@@ -135,6 +135,6 @@ export const authenticate = async (
   }
 };
 
-export const logout = async () => {
-  await signOut({ redirectTo: '/' });
+export const logout = async (callbackUrl: string) => {
+  await signOut({ redirectTo: callbackUrl || '/' });
 };

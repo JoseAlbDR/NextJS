@@ -3,6 +3,7 @@
 import { logout } from '@/lib/actions';
 import { useUIStore } from '@/store';
 import clsx from 'clsx';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 
@@ -22,14 +23,13 @@ const Sidebar = () => {
   const isSideMenuOpen = useUIStore((state) => state.isSideMenuOpen);
   const closeSideMenu = useUIStore((state) => state.closeSideMenu);
 
+  const { data: session } = useSession();
+  const isLoggedIn = !!session?.user;
+
   const pathname = usePathname();
   const searchParams = useSearchParams();
-
   const page = searchParams.get('page') || '';
-
   const callbackUrl = page ? `${pathname}?page=${page}` : pathname;
-
-  console.log({ callbackUrl });
 
   return (
     <div className="">
@@ -85,24 +85,29 @@ const Sidebar = () => {
           <IoTicketOutline size={30} />
           <span className="ml-3 text-xl">Ordenes</span>
         </Link>
-        <Link
-          href={`/auth/login?callbackUrl=${callbackUrl}`}
-          className="flex items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all"
-          onClick={() => closeSideMenu()}
-        >
-          <IoLogInOutline size={30} />
-          <span className="ml-3 text-xl">Ingresar</span>
-        </Link>
-        <button
-          className="w-full flex items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all"
-          onClick={() => {
-            closeSideMenu();
-            logout();
-          }}
-        >
-          <IoLogOutOutline size={30} />
-          <span className="ml-3 text-xl">Salir</span>
-        </button>
+        {!isLoggedIn && (
+          <Link
+            href={`/auth/login?callbackUrl=${callbackUrl}`}
+            className="flex items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all"
+            onClick={() => closeSideMenu()}
+          >
+            <IoLogInOutline size={30} />
+            <span className="ml-3 text-xl">Ingresar</span>
+          </Link>
+        )}
+        {isLoggedIn && (
+          <button
+            className="w-full flex items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all"
+            onClick={() => {
+              closeSideMenu();
+              logout(callbackUrl);
+            }}
+          >
+            <IoLogOutOutline size={30} />
+            <span className="ml-3 text-xl">Salir</span>
+          </button>
+        )}
+
         {/* Separator */}
         <div className="w-full h-px bg-gray-200 my-10"></div>
         <Link
