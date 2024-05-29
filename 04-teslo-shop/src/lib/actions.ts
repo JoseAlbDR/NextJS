@@ -1,7 +1,7 @@
 'use server';
 import { Product, Type } from '@/interfaces';
 import prisma from './db';
-import { Prisma } from '@prisma/client';
+import { Country, Prisma } from '@prisma/client';
 import { signIn, signOut } from '@/auth.config';
 import { AuthError } from 'next-auth';
 import { sleep } from '@/utils';
@@ -16,6 +16,21 @@ interface GetProductsPayload {
 interface SlugPayload {
   slug: string;
 }
+
+export const getCountries = async (): Promise<Country[]> => {
+  try {
+    const countries = await prisma.country.findMany({
+      orderBy: {
+        name: 'asc',
+      },
+    });
+
+    return countries;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
 
 export const getStockBySlug = async ({ slug }: SlugPayload) => {
   try {
