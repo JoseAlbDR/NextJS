@@ -36,8 +36,8 @@ const LoginForm = () => {
   );
 
   useEffect(() => {
-    if (state === 'Success') window.location.replace('/');
-  }, [state]);
+    if (state === 'Success') window.location.replace(callbackUrl);
+  }, [state, callbackUrl]);
 
   return (
     <form className="flex flex-col" action={dispatch}>
