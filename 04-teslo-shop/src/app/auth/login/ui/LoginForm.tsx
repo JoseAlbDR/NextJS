@@ -29,12 +29,15 @@ const LoginButton = () => {
 const LoginForm = () => {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/';
-  console.log({ callbackUrl });
   const [state, dispatch] = useFormState(
     (state: string | undefined, formData: FormData) =>
       authenticate(state, formData, callbackUrl),
     undefined
   );
+
+  useEffect(() => {
+    if (state === 'Success') window.location.replace('/');
+  }, [state]);
 
   return (
     <form className="flex flex-col" action={dispatch}>

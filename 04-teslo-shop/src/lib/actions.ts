@@ -5,6 +5,7 @@ import { Prisma } from '@prisma/client';
 import { signIn, signOut } from '@/auth.config';
 import { AuthError } from 'next-auth';
 import { sleep } from '@/utils';
+import bcrypt from 'bcryptjs';
 
 interface GetProductsPayload {
   page?: number;
@@ -118,9 +119,10 @@ export const authenticate = async (
     // await sleep(3000);
     await signIn('credentials', {
       ...Object.fromEntries(formData),
-      redirectTo: callbackUrl || '/',
+      // redirectTo: callbackUrl || '/',
+      redirect: false,
     });
-    return undefined;
+    return 'Success';
   } catch (error) {
     // console.log(error);
     if (error instanceof AuthError) {
@@ -135,6 +137,66 @@ export const authenticate = async (
   }
 };
 
-export const logout = async (callbackUrl: string) => {
-  await signOut({ redirectTo: callbackUrl || '/' });
+export const logout = async () => {
+  try {
+    await signOut();
+  } catch (error) {
+    return 'CredentialsSignOut';
+  }
+};
+
+export const registerUser = async (
+  name: string,
+  email: string,
+  password: string
+) => {
+  try {
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email: email.toLowerCase(),
+        password: bcrypt.hashSync(password),
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+    });
+
+    return {
+      ok: true,
+      user: user,
+      message: 'Usuario creado',
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      ok: false,
+      message: 'Algo fue mal...inténtelo más tarde',
+    };
+  }
+};
+
+export const login = async (email: string, password: string) => {
+  try {
+    // await sleep(3000);
+    await signIn('credentials', {
+      email,
+      password,
+      // redirectTo: callbackUrl || '/',
+      redirect: false,
+    });
+    return { ok: true };
+  } catch (error) {
+    // console.log(error);
+    if (error instanceof AuthError) {
+      console.log(error);
+      return {
+        ok: false,
+        message: 'No se pudo iniciar sesion',
+      };
+    }
+    throw error;
+  }
 };
