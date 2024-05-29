@@ -1,4 +1,4 @@
-import { ValidSizes, ValidTypes, initialData } from './seed';
+import { ValidSizes, ValidTypes, initialData, countries } from './seed';
 import prisma from '../lib/db';
 
 interface Category {
@@ -28,6 +28,7 @@ const main = async () => {
     prisma.product.deleteMany(),
     prisma.category.deleteMany(),
     prisma.user.deleteMany(),
+    prisma.country.deleteMany(),
   ]);
 
   // const { categories } = initialData.products.reduce(
@@ -44,6 +45,10 @@ const main = async () => {
   // );
 
   // categories.push({ name: 'pants' }
+
+  await prisma.country.createMany({
+    data: countries,
+  });
 
   await prisma.user.createMany({
     data: initialData.users,
