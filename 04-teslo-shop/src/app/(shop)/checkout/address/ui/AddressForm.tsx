@@ -1,15 +1,16 @@
 'use client';
+import { deleteUserAddress, saveUserAddress } from '@/lib/actions';
 import { useAddressStore } from '@/store/address/address-store';
-import { Country } from '@prisma/client';
+import { Address, Country } from '@prisma/client';
 import clsx from 'clsx';
 import React, { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-interface FormInputs {
+export interface FormInputs {
   name: string;
   lastName: string;
   address: string;
-  address2?: string;
+  address2?: string | null;
   zip: string;
   city: string;
   country: string;
@@ -19,9 +20,11 @@ interface FormInputs {
 
 interface Props {
   countries: Country[];
+  DBAddress: FormInputs | null;
+  userId?: string;
 }
 
-const AddressForm = ({ countries }: Props) => {
+const AddressForm = ({ countries, userId, DBAddress }: Props) => {
   const setAddress = useAddressStore((state) => state.setAddress);
   const address = useAddressStore((state) => state.address);
 
@@ -31,16 +34,30 @@ const AddressForm = ({ countries }: Props) => {
     formState: { isValid },
     reset,
   } = useForm<FormInputs>({
-    // defaultValues: {
-    //   ...address,
-    // },
+    defaultValues: {
+      name: DBAddress?.name || '',
+      lastName: DBAddress?.lastName || '',
+      address: DBAddress?.address || '',
+      address2: DBAddress?.address2 || '',
+      zip: DBAddress?.zip || '',
+      city: DBAddress?.city || '',
+      country: DBAddress?.country || '',
+      phone: DBAddress?.phone || '',
+      rememberAddress: DBAddress?.rememberAddress || false,
+    },
   });
 
   useEffect(() => {
     if (address.name) reset(address);
   }, [address, reset]);
 
-  const onFormSubmit: SubmitHandler<FormInputs> = (data) => {
+  const onFormSubmit: SubmitHandler<FormInputs> = async (data) => {
+    if (data.rememberAddress && userId) {
+      await saveUserAddress(data, userId);
+    } else {
+      await deleteUserAddress(userId!);
+    }
+
     setAddress({ ...data, address2: data.address2 ? data.address2 : '' });
   };
 
@@ -137,7 +154,6 @@ const AddressForm = ({ countries }: Props) => {
               type="checkbox"
               className="border-gray-500 before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border border-blue-gray-200 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-blue-500 checked:bg-blue-500 checked:before:bg-blue-500 hover:before:opacity-10"
               id="checkbox"
-              checked
               {...register('rememberAddress', { required: false })}
             />
             <div className="pointer-events-none absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 text-white opacity-0 transition-opacity peer-checked:opacity-100">

@@ -1,11 +1,12 @@
 'use server';
 import { Product, Type } from '@/interfaces';
 import prisma from './db';
-import { Country, Prisma } from '@prisma/client';
+import { Address, Country, Prisma } from '@prisma/client';
 import { signIn, signOut } from '@/auth.config';
 import { AuthError } from 'next-auth';
 import { sleep } from '@/utils';
 import bcrypt from 'bcryptjs';
+import { FormInputs } from '@/app/(shop)/checkout/address/ui/AddressForm';
 
 interface GetProductsPayload {
   page?: number;
@@ -16,6 +17,95 @@ interface GetProductsPayload {
 interface SlugPayload {
   slug: string;
 }
+
+export const deleteUserAddress = async (userId: string) => {
+  try {
+    await prisma.address.delete({
+      where: {
+        userId,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    throw new Error('Error borrando dirección');
+  }
+};
+
+export const saveUserAddress = async (address: FormInputs, userId: string) => {
+  const query: Prisma.AddressUpsertArgs = {
+    create: {
+      ...address,
+      country: {
+        connect: {
+          id: address.country,
+        },
+      },
+      user: {
+        connect: {
+          id: userId,
+        },
+      },
+    },
+    update: {
+      ...address,
+      country: {
+        connect: {
+          id: address?.country,
+        },
+      },
+      user: {
+        connect: {
+          id: userId,
+        },
+      },
+    },
+    where: {
+      userId,
+    },
+  };
+
+  try {
+    await prisma.address.upsert({
+      ...query,
+    });
+  } catch (error) {
+    console.log(error);
+    throw new Error('Error guardando dirección');
+  }
+};
+
+export const getUserAddress = async (userId: string) => {
+  try {
+    const address = await prisma.address.findUnique({
+      where: {
+        userId,
+      },
+      select: {
+        id: true,
+        name: true,
+        lastName: true,
+        address: true,
+        address2: true,
+        zip: true,
+        city: true,
+        phone: true,
+        rememberAddress: true,
+        country: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    if (!address) return null;
+
+    return { ...address, country: address?.country.name };
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
 
 export const getCountries = async (): Promise<Country[]> => {
   try {
