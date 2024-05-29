@@ -1,7 +1,8 @@
 'use client';
+import { useAddressStore } from '@/store/address/address-store';
 import { Country } from '@prisma/client';
 import clsx from 'clsx';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 interface FormInputs {
@@ -21,14 +22,26 @@ interface Props {
 }
 
 const AddressForm = ({ countries }: Props) => {
+  const setAddress = useAddressStore((state) => state.setAddress);
+  const address = useAddressStore((state) => state.address);
+
   const {
     handleSubmit,
     register,
     formState: { isValid },
-  } = useForm<FormInputs>();
+    reset,
+  } = useForm<FormInputs>({
+    // defaultValues: {
+    //   ...address,
+    // },
+  });
+
+  useEffect(() => {
+    if (address.name) reset(address);
+  }, [address, reset]);
 
   const onFormSubmit: SubmitHandler<FormInputs> = (data) => {
-    console.log(data);
+    setAddress({ ...data, address2: data.address2 ? data.address2 : '' });
   };
 
   return (
