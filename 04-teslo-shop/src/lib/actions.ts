@@ -1,10 +1,9 @@
 'use server';
-import { Product, Type } from '@/interfaces';
+import { Product, Size, Type } from '@/interfaces';
 import prisma from './db';
 import { Address, Country, Prisma } from '@prisma/client';
-import { signIn, signOut } from '@/auth.config';
+import { auth, signIn, signOut } from '@/auth.config';
 import { AuthError } from 'next-auth';
-import { sleep } from '@/utils';
 import bcrypt from 'bcryptjs';
 import { FormInputs } from '@/app/(shop)/checkout/address/ui/AddressForm';
 
@@ -279,4 +278,95 @@ export const login = async (email: string, password: string) => {
     }
     throw error;
   }
+};
+
+interface ProductToOrder {
+  id: string;
+  size: Size;
+  quantity: number;
+}
+
+interface IAddress {
+  name: string;
+  lastName: string;
+  address: string;
+  address2: string;
+  zip: string;
+  city: string;
+  country: string;
+  phone: string;
+  rememberAddress: boolean;
+}
+
+export const placeOrder = async (
+  cartProducts: ProductToOrder[],
+  address: IAddress
+) => {
+  const session = await auth();
+
+  const userId = session?.user.id;
+
+  if (!userId)
+    return {
+      ok: false,
+      message: 'No hay sesión de usuario',
+    };
+
+  // Obtener los productos
+
+  const products = await prisma.product.findMany({
+    where: {
+      id: {
+        in: cartProducts.map((product) => product.id),
+      },
+    },
+  });
+
+  let subTotal = 0;
+  let itemsInOrder = 0;
+  cartProducts.forEach((product) => {
+    const item = products.find((item) => item.id === product.id);
+    if (item) {
+      subTotal += item?.price * product.quantity;
+      itemsInOrder += product.quantity;
+    }
+  });
+
+  const tax = subTotal * 0.21;
+  const total = tax + subTotal;
+
+  const order = await prisma.order.create({
+    data: {
+      userId,
+      subTotal,
+      tax,
+      total,
+      itemsInOrder,
+      OrderAddress: {
+        create: {
+          name: address.name,
+          lastName: address.lastName,
+          address: address.address,
+          address2: address.address2,
+          zip: address.zip,
+          city: address.city,
+          countryId: address.country,
+          phone: address.phone,
+          rememberAddress: address.rememberAddress,
+        },
+      },
+      orderItem: {
+        createMany: {
+          data: cartProducts.map((product) => ({
+            productId: product.id,
+            size: product.size,
+            quantity: product.quantity,
+            price: products.find((item) => item.id === product.id)?.price!,
+          })),
+        },
+      },
+    },
+  });
+
+  console.log({ order });
 };

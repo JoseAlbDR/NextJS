@@ -1,7 +1,9 @@
 'use client';
+import { placeOrder } from '@/lib/actions';
 import { useCartStore } from '@/store';
 import { useAddressStore } from '@/store/address/address-store';
 import { currencyFormat, sleep } from '@/utils';
+import { Address } from '@prisma/client';
 import clsx from 'clsx';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
@@ -30,10 +32,13 @@ const Checkout = () => {
       quantity: product.quantity,
     }));
 
-    console.log({ address, productsToOrder });
-    await sleep(2000);
-
-    setIsPlacingOrder(false);
+    try {
+      const resp = await placeOrder(productsToOrder, address);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsPlacingOrder(false);
+    }
   };
 
   return (
