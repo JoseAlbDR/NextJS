@@ -24,6 +24,7 @@ interface Image {
 
 const main = async () => {
   await prisma.$transaction([
+    prisma.address.deleteMany(),
     prisma.productImage.deleteMany(),
     prisma.product.deleteMany(),
     prisma.category.deleteMany(),

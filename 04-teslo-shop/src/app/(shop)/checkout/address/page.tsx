@@ -15,7 +15,7 @@ export default async function AddressPage() {
         <Title title="Dirección" subtitle="Dirección de entrega" />
         <AddressForm
           countries={countries}
-          userId={session?.user.id}
+          userId={session?.user.id!}
           DBAddress={address}
         />
       </div>

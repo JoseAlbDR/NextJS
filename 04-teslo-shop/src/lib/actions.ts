@@ -32,42 +32,30 @@ export const deleteUserAddress = async (userId: string) => {
 };
 
 export const saveUserAddress = async (address: FormInputs, userId: string) => {
+  const updateOrCreateAddress = {
+    ...address,
+    country: {
+      connect: {
+        id: address.country,
+      },
+    },
+    user: {
+      connect: {
+        id: userId,
+      },
+    },
+  };
+
   const query: Prisma.AddressUpsertArgs = {
-    create: {
-      ...address,
-      country: {
-        connect: {
-          id: address.country,
-        },
-      },
-      user: {
-        connect: {
-          id: userId,
-        },
-      },
-    },
-    update: {
-      ...address,
-      country: {
-        connect: {
-          id: address?.country,
-        },
-      },
-      user: {
-        connect: {
-          id: userId,
-        },
-      },
-    },
+    create: updateOrCreateAddress,
+    update: updateOrCreateAddress,
     where: {
       userId,
     },
   };
 
   try {
-    await prisma.address.upsert({
-      ...query,
-    });
+    await prisma.address.upsert(query);
   } catch (error) {
     console.log(error);
     throw new Error('Error guardando dirección');
@@ -80,27 +68,14 @@ export const getUserAddress = async (userId: string) => {
       where: {
         userId,
       },
-      select: {
-        id: true,
-        name: true,
-        lastName: true,
-        address: true,
-        address2: true,
-        zip: true,
-        city: true,
-        phone: true,
-        rememberAddress: true,
-        country: {
-          select: {
-            name: true,
-          },
-        },
+      include: {
+        country: true,
       },
     });
 
     if (!address) return null;
 
-    return { ...address, country: address?.country.name };
+    return { ...address, country: address?.country.id };
   } catch (error) {
     console.log(error);
     return null;

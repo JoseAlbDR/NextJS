@@ -81,7 +81,7 @@ model Address {
   name            String
   lastName        String
   address         String
-  address2        String? @default("")
+  address2        String  @default("N/A")
   zip             String
   city            String
   phone           String

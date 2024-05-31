@@ -5,12 +5,13 @@ import { Address, Country } from '@prisma/client';
 import clsx from 'clsx';
 import React, { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 
 export interface FormInputs {
   name: string;
   lastName: string;
   address: string;
-  address2?: string | null;
+  address2?: string;
   zip: string;
   city: string;
   country: string;
@@ -21,12 +22,13 @@ export interface FormInputs {
 interface Props {
   countries: Country[];
   DBAddress: FormInputs | null;
-  userId?: string;
+  userId: string;
 }
 
 const AddressForm = ({ countries, userId, DBAddress }: Props) => {
   const setAddress = useAddressStore((state) => state.setAddress);
   const address = useAddressStore((state) => state.address);
+  const router = useRouter();
 
   const {
     handleSubmit,
@@ -52,13 +54,14 @@ const AddressForm = ({ countries, userId, DBAddress }: Props) => {
   }, [address, reset]);
 
   const onFormSubmit: SubmitHandler<FormInputs> = async (data) => {
+    setAddress({ ...data, address2: data.address2 ? data.address2 : '' });
     if (data.rememberAddress && userId) {
       await saveUserAddress(data, userId);
     } else {
       await deleteUserAddress(userId!);
     }
 
-    setAddress({ ...data, address2: data.address2 ? data.address2 : '' });
+    router.push('/checkout');
   };
 
   return (
