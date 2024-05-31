@@ -1,20 +1,32 @@
 'use client';
 import { useCartStore } from '@/store';
-import { currencyFormat } from '@/utils';
+import { useAddressStore } from '@/store/address/address-store';
+import { currencyFormat, sleep } from '@/utils';
+import clsx from 'clsx';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { FaSpinner } from 'react-icons/fa';
 
 const Checkout = () => {
   const [loaded, setLoaded] = useState(false);
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
   const { subtotal, total, tax, totalProducts } = useCartStore((state) =>
     state.getSummaryInformation()
   );
+  const address = useAddressStore((state) => state.address);
 
   useEffect(() => {
     setLoaded(true);
   }, [loaded]);
+
+  const onPlaceOrder = async () => {
+    setIsPlacingOrder(true);
+
+    await sleep(2000);
+
+    setIsPlacingOrder(false);
+  };
 
   return (
     <div className="bg-white rounded-xl h-fit">
@@ -37,13 +49,19 @@ const Checkout = () => {
               {currencyFormat(total)}
             </span>
           </div>
+
+          {/* <p className="text-red-500">Error de creacion</p> */}
           <div className="mt-5 mb-2 w-full">
-            <Link
-              href="/checkout/address"
-              className="flex justify-center btn-primary mt-5"
+            <button
+              className={clsx('flex justify-center', {
+                'btn-primary': !isPlacingOrder,
+                'btn-disabled': isPlacingOrder,
+              })}
+              disabled={isPlacingOrder}
+              onClick={onPlaceOrder}
             >
               Finalizar Compra
-            </Link>
+            </button>
           </div>
         </>
       )}
