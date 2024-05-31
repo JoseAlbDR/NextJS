@@ -15,6 +15,7 @@ const Checkout = () => {
     state.getSummaryInformation()
   );
   const address = useAddressStore((state) => state.address);
+  const cart = useCartStore((state) => state.cart);
 
   useEffect(() => {
     setLoaded(true);
@@ -23,6 +24,13 @@ const Checkout = () => {
   const onPlaceOrder = async () => {
     setIsPlacingOrder(true);
 
+    const productsToOrder = cart.map((product) => ({
+      id: product.id,
+      size: product.size,
+      quantity: product.quantity,
+    }));
+
+    console.log({ address, productsToOrder });
     await sleep(2000);
 
     setIsPlacingOrder(false);
