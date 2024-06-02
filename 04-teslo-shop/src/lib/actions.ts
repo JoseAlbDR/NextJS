@@ -422,6 +422,15 @@ export const placeOrder = async (
 };
 
 export const getOrder = async (id: string) => {
+  const session = await auth();
+
+  if (!session) {
+    return {
+      ok: false,
+      message: 'No hay una sesion activa',
+    };
+  }
+
   try {
     const order = await prisma.order.findUnique({
       where: {
@@ -433,7 +442,12 @@ export const getOrder = async (id: string) => {
           include: {
             product: {
               include: {
-                images: true,
+                images: {
+                  select: {
+                    url: true,
+                  },
+                  take: 1,
+                },
               },
             },
           },
@@ -443,7 +457,43 @@ export const getOrder = async (id: string) => {
 
     if (!order) throw new Error('No se encontro la orden');
 
-    return { ok: true, order };
+    if (session.user.role === 'user')
+      if (session.user.id !== order.userId)
+        throw new Error('No tienes permisos para ver esta orden');
+
+    return { ok: true, order, message: 'Orden encontrada' };
+  } catch (error: any) {
+    console.log(error);
+    return {
+      ok: false,
+      message: error?.message,
+    };
+  }
+};
+
+export const getUserOrders = async () => {
+  const session = await auth();
+  if (!session) {
+    return {
+      ok: false,
+      message: 'No hay una sesion activa',
+    };
+  }
+
+  try {
+    const orders = await prisma.order.findMany({
+      where: {
+        userId: session.user.id,
+      },
+      include: {
+        user: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+    return { ok: true, orders, message: 'Ordenes encontradas' };
   } catch (error: any) {
     console.log(error);
     return {
