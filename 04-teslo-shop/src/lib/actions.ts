@@ -337,77 +337,86 @@ export const placeOrder = async (
   const tax = subTotal * 0.21;
   const total = tax + subTotal;
 
-  const response = await prisma.$transaction(async (tx) => {
-    const updatedProductsPromises = products.map((product) => {
-      // Acumular los valores
-      const productQuantity = cartProducts
-        .filter((p) => p.id === product.id)
-        .reduce((acc, p) => acc + p.quantity, 0);
+  try {
+    const response = await prisma.$transaction(async (tx) => {
+      const updatedProductsPromises = products.map((product) => {
+        // Acumular los valores
+        const productQuantity = cartProducts
+          .filter((p) => p.id === product.id)
+          .reduce((acc, p) => acc + p.quantity, 0);
 
-      if (productQuantity === 0)
-        throw new Error(`${product.id} no tiene cantidad definida`);
+        if (productQuantity === 0)
+          throw new Error(`${product.id} no tiene cantidad definida`);
 
-      return tx.product.update({
-        where: {
-          id: product.id,
-        },
+        return tx.product.update({
+          where: {
+            id: product.id,
+          },
+          data: {
+            inStock: {
+              decrement: productQuantity,
+            },
+          },
+        });
+      });
+
+      const updatedProducts = await Promise.all(updatedProductsPromises);
+
+      updatedProducts.forEach((product) => {
+        if (product.inStock <= 0)
+          throw new Error(`${product.title} no tiene stock`);
+      });
+
+      const order = await tx.order.create({
         data: {
-          inStock: {
-            decrement: productQuantity,
+          userId,
+          subTotal,
+          tax,
+          total,
+          itemsInOrder,
+          OrderAddress: {
+            create: {
+              name: address.name,
+              lastName: address.lastName,
+              address: address.address,
+              address2: address.address2,
+              zip: address.zip,
+              city: address.city,
+              countryId: address.country,
+              phone: address.phone,
+              rememberAddress: address.rememberAddress,
+            },
+          },
+          orderItem: {
+            createMany: {
+              data: cartProducts.map((product) => ({
+                productId: product.id,
+                size: product.size,
+                quantity: product.quantity,
+                price: products.find((item) => item.id === product.id)?.price!,
+              })),
+            },
           },
         },
       });
+
+      if (order) return { ok: true, message: 'Orden creada', order };
+
+      return {
+        ok: false,
+        message: 'No se pudo crear la orden',
+      };
     });
-
-    const updatedProducts = await Promise.all(updatedProductsPromises);
-
-    updatedProducts.forEach((product) => {
-      if (product.inStock <= 0)
-        throw new Error(`${product.title} no tiene stock`);
-    });
-
-    const order = await tx.order.create({
-      data: {
-        userId,
-        subTotal,
-        tax,
-        total,
-        itemsInOrder,
-        OrderAddress: {
-          create: {
-            name: address.name,
-            lastName: address.lastName,
-            address: address.address,
-            address2: address.address2,
-            zip: address.zip,
-            city: address.city,
-            countryId: address.country,
-            phone: address.phone,
-            rememberAddress: address.rememberAddress,
-          },
-        },
-        orderItem: {
-          createMany: {
-            data: cartProducts.map((product) => ({
-              productId: product.id,
-              size: product.size,
-              quantity: product.quantity,
-              price: products.find((item) => item.id === product.id)?.price!,
-            })),
-          },
-        },
-      },
-    });
-
-    if (order) return { ok: true, message: 'Orden creada', order };
 
     return {
-      ok: false,
-      message: 'No se pudo crear la orden',
+      ok: response.ok,
+      order: response.order || {},
+      message: response.message,
     };
-  });
-
-  console.log({ response });
-
-  return response;
+  } catch (error: any) {
+    return {
+      ok: false,
+      message: error?.message,
+    };
+  }
 };

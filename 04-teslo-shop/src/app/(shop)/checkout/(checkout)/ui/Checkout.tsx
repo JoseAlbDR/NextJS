@@ -41,7 +41,7 @@ const Checkout = () => {
     try {
       const resp = await placeOrder(productsToOrder, address);
 
-      if (!resp?.ok) setError(resp.message);
+      if (resp && !resp?.ok) setError(resp.message);
 
       console.log({ resp });
     } catch (error) {
