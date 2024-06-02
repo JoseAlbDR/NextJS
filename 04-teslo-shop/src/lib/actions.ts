@@ -325,7 +325,9 @@ export const placeOrder = async (
   let subTotal = 0;
   let itemsInOrder = 0;
   cartProducts.forEach((product) => {
-    const item = products.find((item) => item.id === product.id);
+    const item = products.find(
+      (item) => item.id === product.id && item.sizes.includes(product.size)
+    );
     if (item) {
       subTotal += item?.price * product.quantity;
       itemsInOrder += product.quantity;
@@ -335,38 +337,70 @@ export const placeOrder = async (
   const tax = subTotal * 0.21;
   const total = tax + subTotal;
 
-  const order = await prisma.order.create({
-    data: {
-      userId,
-      subTotal,
-      tax,
-      total,
-      itemsInOrder,
-      OrderAddress: {
-        create: {
-          name: address.name,
-          lastName: address.lastName,
-          address: address.address,
-          address2: address.address2,
-          zip: address.zip,
-          city: address.city,
-          countryId: address.country,
-          phone: address.phone,
-          rememberAddress: address.rememberAddress,
+  const response = await prisma.$transaction(async (tx) => {
+    cartProducts.forEach(async (product) => {
+      const item = products.find(
+        (item) => item.id === product.id && item.sizes.includes(product.size)
+      );
+
+      if (item) {
+        if (item.inStock <= 0) {
+          throw new Error('No hay stock del producto');
+        }
+
+        const updatedProduct = await tx.product.update({
+          where: { id: item.id },
+          data: {
+            inStock: item.inStock - product.quantity,
+          },
+        });
+
+        console.log({ updatedProduct });
+      }
+    });
+
+    const order = await tx.order.create({
+      data: {
+        userId,
+        subTotal,
+        tax,
+        total,
+        itemsInOrder,
+        OrderAddress: {
+          create: {
+            name: address.name,
+            lastName: address.lastName,
+            address: address.address,
+            address2: address.address2,
+            zip: address.zip,
+            city: address.city,
+            countryId: address.country,
+            phone: address.phone,
+            rememberAddress: address.rememberAddress,
+          },
+        },
+        orderItem: {
+          createMany: {
+            data: cartProducts.map((product) => ({
+              productId: product.id,
+              size: product.size,
+              quantity: product.quantity,
+              price: products.find((item) => item.id === product.id)?.price!,
+            })),
+          },
         },
       },
-      orderItem: {
-        createMany: {
-          data: cartProducts.map((product) => ({
-            productId: product.id,
-            size: product.size,
-            quantity: product.quantity,
-            price: products.find((item) => item.id === product.id)?.price!,
-          })),
-        },
-      },
-    },
+    });
+
+    if (order) return { ok: true, message: 'Orden creada', order };
+
+    return {
+      ok: false,
+      message: 'No se pudo crear la orden',
+    };
   });
 
-  console.log({ order });
+  console.log({ response });
+
+  return response;
 };

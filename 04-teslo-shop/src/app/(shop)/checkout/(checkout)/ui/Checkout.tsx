@@ -9,9 +9,15 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { FaSpinner } from 'react-icons/fa';
 
+interface CheckoutError {
+  ok: boolean;
+  message: string;
+}
+
 const Checkout = () => {
   const [loaded, setLoaded] = useState(false);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+  const [error, setError] = useState('');
 
   const { subtotal, total, tax, totalProducts } = useCartStore((state) =>
     state.getSummaryInformation()
@@ -34,8 +40,18 @@ const Checkout = () => {
 
     try {
       const resp = await placeOrder(productsToOrder, address);
+
+      if (!resp?.ok) setError(resp.message);
+
+      console.log({ resp });
     } catch (error) {
       console.log(error);
+      if (error instanceof Error) {
+        console.log(error.message);
+        setError(error.message);
+        return;
+      }
+      setError('Hubo un error al realizar la compra');
     } finally {
       setIsPlacingOrder(false);
     }
@@ -63,7 +79,8 @@ const Checkout = () => {
             </span>
           </div>
 
-          {/* <p className="text-red-500">Error de creacion</p> */}
+          {error && <p className="text-red-500">{error}</p>}
+
           <div className="mt-5 mb-2 w-full">
             <button
               className={clsx('flex justify-center', {
