@@ -24,7 +24,12 @@ export const authConfig: NextAuthConfig = {
       return session;
     },
     authorized({ auth, request: { nextUrl } }) {
-      const privateRoutes = ['/profile', '/checkout', '/checkout/address'];
+      const privateRoutes = [
+        '/profile',
+        '/checkout',
+        '/checkout/address',
+        '/orders',
+      ];
       const loginRoute = '/auth/login';
 
       const isLoggedIn = !!auth?.user;

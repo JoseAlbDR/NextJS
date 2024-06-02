@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import { Title } from '@/components';
 import { getUserOrders } from '@/lib/actions';
 import clsx from 'clsx';
@@ -52,9 +55,9 @@ const OrdersPage = async () => {
                   {order.id.split('-').at(-1)}
                 </td>
                 <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {order.user.name}
+                  {order.OrderAddress?.name}
                 </td>
-                <td className="flex items-center text-sm  text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                <td className="flex items-center text-sm  text-gray-900 font-light px-6 py-4 whitespace-nowrap gap-1">
                   <IoCardOutline
                     className={clsx({
                       'text-green-800': order.isPaid,
@@ -62,7 +65,7 @@ const OrdersPage = async () => {
                     })}
                   />
                   <span
-                    className={clsx('mt-2', {
+                    className={clsx({
                       'text-green-800': order.isPaid,
                       'text-red-800': !order.isPaid,
                     })}
