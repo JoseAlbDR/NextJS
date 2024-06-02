@@ -338,25 +338,32 @@ export const placeOrder = async (
   const total = tax + subTotal;
 
   const response = await prisma.$transaction(async (tx) => {
-    cartProducts.forEach(async (product) => {
-      const item = products.find(
-        (item) => item.id === product.id && item.sizes.includes(product.size)
-      );
+    const updatedProductsPromises = products.map((product) => {
+      // Acumular los valores
+      const productQuantity = cartProducts
+        .filter((p) => p.id === product.id)
+        .reduce((acc, p) => acc + p.quantity, 0);
 
-      if (item) {
-        if (item.inStock <= 0) {
-          throw new Error('No hay stock del producto');
-        }
+      if (productQuantity === 0)
+        throw new Error(`${product.id} no tiene cantidad definida`);
 
-        const updatedProduct = await tx.product.update({
-          where: { id: item.id },
-          data: {
-            inStock: item.inStock - product.quantity,
+      return tx.product.update({
+        where: {
+          id: product.id,
+        },
+        data: {
+          inStock: {
+            decrement: productQuantity,
           },
-        });
+        },
+      });
+    });
 
-        console.log({ updatedProduct });
-      }
+    const updatedProducts = await Promise.all(updatedProductsPromises);
+
+    updatedProducts.forEach((product) => {
+      if (product.inStock <= 0)
+        throw new Error(`${product.title} no tiene stock`);
     });
 
     const order = await tx.order.create({
