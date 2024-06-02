@@ -13,4 +13,5 @@ export { default as Pagination } from './ui/pagination/Pagination';
 export { default as PageNotFound } from './ui/not-found/PageNotFound';
 export { default as StockLabel } from './product/stock-label/StockLabel';
 export { default as StockLabelSkeleton } from './ui/skeletons/StockLabelSkeleton';
-export { default as Provider } from './provider/Provider';
+export { default as Provider } from './providers/Providers';
+export { default as PaypalButton } from './paypal/PaypalButton';

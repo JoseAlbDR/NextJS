@@ -1,4 +1,4 @@
-import { QuantitySelector, Title } from '@/components';
+import { PaypalButton, QuantitySelector, Title } from '@/components';
 import { Product } from '@/interfaces';
 import { getOrder } from '@/lib/actions';
 import { initialData } from '@/seed/seed';
@@ -101,22 +101,7 @@ const OrderPage = async ({ params }: Props) => {
                 </span>
               </div>
               <div className="mt-5 mb-2 w-full">
-                <div
-                  className={clsx(
-                    'flex items-center rounded-lg py-2 px-3.5 text-sx font-bold text-white mb-5',
-                    {
-                      'bg-red-500': !order?.isPaid,
-                      'bg-green-700': order?.isPaid,
-                    }
-                  )}
-                >
-                  <IoCardOutline size={30} />
-                  {!order?.isPaid ? (
-                    <span className="mx-2">Pendiente de pago</span>
-                  ) : (
-                    <span className="mx-2">Pagado</span>
-                  )}
-                </div>
+                <PaypalButton />
               </div>
             </div>
           </div>
