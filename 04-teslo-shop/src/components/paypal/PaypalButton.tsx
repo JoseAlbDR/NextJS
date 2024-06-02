@@ -6,7 +6,7 @@ const PaypalButton = () => {
   const [{ isPending }] = usePayPalScriptReducer();
 
   return isPending ? (
-    <div className="animate-pulse flex flex-col gap-3">
+    <div className="animate-pulse flex flex-col gap-3 mb-12">
       <div className="h-12 bg-gray-300 rounded"></div>
       <div className="h-12 bg-gray-300 rounded"></div>
     </div>
