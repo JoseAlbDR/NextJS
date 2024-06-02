@@ -32,6 +32,7 @@ const PaypalButton = ({ orderId, amount }: Props) => {
       intent: 'CAPTURE',
       purchase_units: [
         {
+          invoice_id: orderId,
           amount: {
             value: String(roundedAmount),
             currency_code: 'EUR',
@@ -49,18 +50,14 @@ const PaypalButton = ({ orderId, amount }: Props) => {
 
   const onApprove = async (data: OnApproveData, actions: OnApproveActions) => {
     const details = await actions.order?.capture();
-
     if (!details) return;
-
     const { order, ok, message } = await checkPaypalPayment(details.id!);
 
     if (!ok) throw new Error(message);
-
     const res = await updateOrderStatus(
-      orderId,
+      order?.purchase_units[0].invoice_id!,
       order?.status! === 'COMPLETED'
     );
-
     if (!res.ok) throw new Error('Error guardado estado de pedido');
   };
 

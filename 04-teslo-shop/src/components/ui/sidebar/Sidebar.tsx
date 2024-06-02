@@ -35,11 +35,11 @@ const Sidebar = () => {
   const callbackUrl = page ? `${pathname}?page=${page}` : pathname;
 
   return (
-    <div className="">
+    <div>
       {/* Background black */}
       {isSideMenuOpen && (
         <>
-          <div className="fixed top-0 left-0 w-screen h-screen bg-black opacity-30 z-10"></div>
+          <div className="fixed top-0 left-0 w-screen h-screen bg-black opacity-30 z-[99998]"></div>
           <div
             onClick={() => closeSideMenu()}
             className="fade-in fixed top-0 left-0 w-screen h-screen z-10 backdrop-filter backdrop-blur-sm"
@@ -52,7 +52,7 @@ const Sidebar = () => {
       {/* Sidebar */}
       <nav
         className={clsx(
-          'fixed p-5 right-0 top-0 w-[500px] h-screen bg-white shadow-2xl transform transition-all duration-300 z-20',
+          'fixed p-5 right-0 top-0 w-[500px] h-screen bg-white shadow-2xl transform transition-all duration-300 z-[99999]',
           {
             'translate-x-full': !isSideMenuOpen,
           }

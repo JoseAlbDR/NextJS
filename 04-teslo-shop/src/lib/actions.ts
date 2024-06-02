@@ -1,5 +1,5 @@
 'use server';
-import { PaypalResponse, Product, Size, Type } from '@/interfaces';
+import { Product, Size, Type, PaypalResponse } from '@/interfaces';
 import prisma from './db';
 import { Address, Country, Prisma } from '@prisma/client';
 import { auth, signIn, signOut } from '@/auth.config';
@@ -546,8 +546,6 @@ export const saveTransactionId = async (
 export const checkPaypalPayment = async (transactionId: string) => {
   const authToken = await getPaypalBearerToken();
 
-  console.log({ authToken });
-
   if (!authToken) {
     return {
       ok: false,
@@ -556,6 +554,8 @@ export const checkPaypalPayment = async (transactionId: string) => {
   }
 
   const data = await verifyPaypalPayment(transactionId, authToken);
+  if (!data)
+    return { ok: false, message: 'No se pudo verificar la transacción' };
 
   return { ok: true, message: 'Transacción verificada', order: data };
 };
@@ -580,9 +580,11 @@ const getPaypalBearerToken = async () => {
   };
 
   try {
-    const response = await fetch(process.env.PAYPAL_OAUTH_URL!, requestOptions);
+    const response = await fetch(process.env.PAYPAL_OAUTH_URL!, {
+      ...requestOptions,
+      cache: 'no-store',
+    });
     const data = await response.json();
-    console.log({ data });
     return data.access_token;
   } catch (error) {
     console.log(error);
@@ -602,11 +604,9 @@ const verifyPaypalPayment = async (transactionId: string, token: string) => {
   try {
     const response = await fetch(
       `${process.env.PAYPAL_ORDERS_URL}/${transactionId}`,
-      requestOptions
+      { ...requestOptions, cache: 'no-store' }
     );
     const data: PaypalResponse = await response.json();
-
-    console.log({ data });
 
     return data;
   } catch (error) {
@@ -624,10 +624,11 @@ export const updateOrderStatus = async (orderId: string, status: boolean) => {
         },
         data: {
           isPaid: status,
+          paidAt: new Date(),
         },
       });
       revalidatePath(`/orders/${orderId}`);
-      revalidatePath('/orders');
+      // revalidatePath('/orders');
     }
 
     return {
