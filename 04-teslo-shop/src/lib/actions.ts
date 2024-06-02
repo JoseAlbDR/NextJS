@@ -1,11 +1,12 @@
 'use server';
-import { Product, Size, Type } from '@/interfaces';
+import { PaypalResponse, Product, Size, Type } from '@/interfaces';
 import prisma from './db';
 import { Address, Country, Prisma } from '@prisma/client';
 import { auth, signIn, signOut } from '@/auth.config';
 import { AuthError } from 'next-auth';
 import bcrypt from 'bcryptjs';
 import { FormInputs } from '@/app/(shop)/checkout/address/ui/AddressForm';
+import { revalidatePath } from 'next/cache';
 
 interface GetProductsPayload {
   page?: number;
@@ -500,6 +501,163 @@ export const getUserOrders = async () => {
     return {
       ok: false,
       message: error?.message,
+    };
+  }
+};
+
+export const saveTransactionId = async (
+  orderId: string,
+  transactionId: string
+) => {
+  const session = await auth();
+
+  try {
+    const order = await prisma.order.findUnique({
+      where: {
+        id: orderId,
+      },
+    });
+
+    if (!order) throw new Error('No se encontro la orden');
+
+    if (order.userId !== session?.user.id)
+      throw new Error('No tienes permisos para realizar esta accion');
+
+    const updatedOrder = await prisma.order.update({
+      where: {
+        id: orderId,
+      },
+      data: {
+        transactionId,
+      },
+    });
+
+    return { ok: true, message: 'Transaccion guardada' };
+  } catch (error: any) {
+    console.log(error);
+
+    return {
+      ok: false,
+      message: error?.message || 'No se pudo realizar la transacción',
+    };
+  }
+};
+
+export const checkPaypalPayment = async (transactionId: string) => {
+  const authToken = await getPaypalBearerToken();
+
+  console.log({ authToken });
+
+  if (!authToken) {
+    return {
+      ok: false,
+      message: 'No se pudo verificar la transacción',
+    };
+  }
+
+  const data = await verifyPaypalPayment(transactionId, authToken);
+
+  return { ok: true, message: 'Transacción verificada', order: data };
+};
+
+const getPaypalBearerToken = async () => {
+  const myHeaders = new Headers();
+  myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+  myHeaders.append(
+    'Authorization',
+    `Basic ${Buffer.from(
+      `${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID}:${process.env.PAYPAL_SECRET}`,
+      'utf-8'
+    ).toString('base64')}`
+  );
+  const urlencoded = new URLSearchParams();
+  urlencoded.append('grant_type', 'client_credentials');
+
+  const requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: urlencoded,
+  };
+
+  try {
+    const response = await fetch(process.env.PAYPAL_OAUTH_URL!, requestOptions);
+    const data = await response.json();
+    console.log({ data });
+    return data.access_token;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
+const verifyPaypalPayment = async (transactionId: string, token: string) => {
+  const myHeaders = new Headers();
+  myHeaders.append('Authorization', `Bearer ${token}`);
+
+  const requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+  };
+
+  try {
+    const response = await fetch(
+      `${process.env.PAYPAL_ORDERS_URL}/${transactionId}`,
+      requestOptions
+    );
+    const data: PaypalResponse = await response.json();
+
+    console.log({ data });
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
+export const updateOrderStatus = async (orderId: string, status: boolean) => {
+  try {
+    if (status) {
+      await prisma.order.update({
+        where: {
+          id: orderId,
+        },
+        data: {
+          isPaid: status,
+        },
+      });
+      revalidatePath(`/orders/${orderId}`);
+      revalidatePath('/orders');
+    }
+
+    return {
+      ok: true,
+    };
+  } catch (error) {
+    console.log(error);
+    return { ok: false };
+  }
+};
+
+export const getOrderStatus = async (orderId: string) => {
+  try {
+    const orderStatus = await prisma.order.findUnique({
+      where: {
+        id: orderId,
+      },
+      select: {
+        isPaid: true,
+      },
+    });
+
+    if (!orderStatus) throw new Error('Error objteniendo estado de la orden');
+
+    return { ok: true, status: orderStatus?.isPaid };
+  } catch (error: any) {
+    console.log(error);
+    return {
+      ok: false,
+      message: error.message,
     };
   }
 };

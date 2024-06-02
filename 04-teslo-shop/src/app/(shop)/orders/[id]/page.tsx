@@ -1,13 +1,9 @@
-import { PaypalButton, QuantitySelector, Title } from '@/components';
-import { Product } from '@/interfaces';
-import { getOrder } from '@/lib/actions';
-import { initialData } from '@/seed/seed';
+import { PaypalButton, Title } from '@/components';
+import { getOrder, getOrderStatus } from '@/lib/actions';
 import { currencyFormat } from '@/utils';
-import clsx from 'clsx';
-import Image from 'next/image';
-import Link from 'next/link';
 import React from 'react';
-import { IoCardOutline } from 'react-icons/io5';
+import OrderCart from './ui/OrderCart';
+import PaidLabel from './ui/PaidLabel';
 
 interface Props {
   params: {
@@ -20,6 +16,8 @@ const OrderPage = async ({ params }: Props) => {
 
   if (!ok) return <div className="text-center h-full">{message}</div>;
 
+  const { status: isPaid } = await getOrderStatus(order!.id);
+
   return (
     <div className="flex justify-center items-center mb-72 px-10 sm:px-0">
       <div className="flex flex-col w-[1000px]">
@@ -27,43 +25,7 @@ const OrderPage = async ({ params }: Props) => {
         <div className="grid grid-col-1 sm:grid-cols-2 gap-10">
           {/* Carrito */}
           <div className="flex flex-col my-6">
-            <div
-              className={clsx(
-                'flex items-center rounded-lg py-2 px-3.5 text-sx font-bold text-white mb-5',
-                {
-                  'bg-red-500': !order?.isPaid,
-                  'bg-green-700': order?.isPaid,
-                }
-              )}
-            >
-              <IoCardOutline size={30} />
-              {!order?.isPaid ? (
-                <span className="mx-2">Pendiente de pago</span>
-              ) : (
-                <span className="mx-2">Pagado</span>
-              )}
-            </div>
-            {order?.orderItem.map(({ quantity, size, product }) => (
-              <div key={`${product.slug} + ${size}`} className="flex mb-5">
-                <Image
-                  src={`/products/${product.images[0].url}`}
-                  width={100}
-                  height={100}
-                  style={{ width: 100, height: 100 }}
-                  alt={product.title}
-                  className="mr-5 rounded"
-                />
-                <div>
-                  <p>{product.title}</p>
-                  <p>
-                    ${product.price} x {quantity}
-                  </p>
-                  <p className="font-semibold">
-                    Subtotal: ${product.price * quantity}
-                  </p>
-                </div>
-              </div>
-            ))}
+            <OrderCart order={order!} />
           </div>
 
           {/* Checkout */}
@@ -101,7 +63,11 @@ const OrderPage = async ({ params }: Props) => {
                 </span>
               </div>
               <div className="mt-5 mb-2 w-full">
-                <PaypalButton />
+                {isPaid ? (
+                  <PaidLabel isPaid={isPaid || false} />
+                ) : (
+                  <PaypalButton amount={order?.total!} orderId={order?.id!} />
+                )}
               </div>
             </div>
           </div>
