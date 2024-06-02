@@ -6,6 +6,7 @@ import { currencyFormat, sleep } from '@/utils';
 import { Address } from '@prisma/client';
 import clsx from 'clsx';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { FaSpinner } from 'react-icons/fa';
 
@@ -18,12 +19,13 @@ const Checkout = () => {
   const [loaded, setLoaded] = useState(false);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [error, setError] = useState('');
-
+  const router = useRouter();
   const { subtotal, total, tax, totalProducts } = useCartStore((state) =>
     state.getSummaryInformation()
   );
   const address = useAddressStore((state) => state.address);
   const cart = useCartStore((state) => state.cart);
+  const clearCart = useCartStore((state) => state.cleanCart);
 
   useEffect(() => {
     setLoaded(true);
@@ -41,9 +43,10 @@ const Checkout = () => {
     try {
       const resp = await placeOrder(productsToOrder, address);
 
-      if (resp && !resp?.ok) setError(resp.message);
+      if (resp && !resp?.ok) throw new Error(resp?.message);
 
-      console.log({ resp });
+      clearCart();
+      router.replace(`/orders/${resp!.order?.id}`);
     } catch (error) {
       console.log(error);
       if (error instanceof Error) {

@@ -18,13 +18,16 @@ interface State {
   addProductToCart: (product: CartProduct) => void;
   changeProductQuantity: (product: CartProduct, quantity: number) => void;
   removeProductFromCart: (product: CartProduct) => void;
+  cleanCart: () => void;
 }
 
 export const useCartStore = create<State>()(
   persist(
     (set, get) => ({
       cart: [],
-
+      cleanCart: () => {
+        set({ cart: [] });
+      },
       getSummaryInformation: () => {
         return {
           totalProducts: get().getTotalItems(),

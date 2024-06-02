@@ -410,10 +410,42 @@ export const placeOrder = async (
 
     return {
       ok: response.ok,
-      order: response.order || {},
+      order: response.order,
       message: response.message,
     };
   } catch (error: any) {
+    return {
+      ok: false,
+      message: error?.message,
+    };
+  }
+};
+
+export const getOrder = async (id: string) => {
+  try {
+    const order = await prisma.order.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        OrderAddress: true,
+        orderItem: {
+          include: {
+            product: {
+              include: {
+                images: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!order) throw new Error('No se encontro la orden');
+
+    return { ok: true, order };
+  } catch (error: any) {
+    console.log(error);
     return {
       ok: false,
       message: error?.message,
