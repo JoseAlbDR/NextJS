@@ -1,15 +1,25 @@
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-import { Title } from '@/components';
-import { getUserOrders } from '@/lib/actions';
+import { Pagination, Title } from '@/components';
+import { getPaginatedOrders, getUserOrders } from '@/lib/actions';
 import clsx from 'clsx';
 import Link from 'next/link';
 import React from 'react';
 import { IoCardOutline } from 'react-icons/io5';
 
-const OrdersPage = async () => {
-  const { orders } = await getUserOrders({ admin: true });
+interface Props {
+  searchParams: {
+    page: string;
+  };
+}
+
+const OrdersPage = async ({ searchParams }: Props) => {
+  const page = +searchParams.page;
+
+  const { orders, currentPage, totalPages } = await getPaginatedOrders({
+    page,
+  });
 
   return (
     <>
@@ -85,6 +95,9 @@ const OrdersPage = async () => {
             ))}
           </tbody>
         </table>
+        <div className="mt-10">
+          <Pagination currentPage={currentPage} totalPages={totalPages} />
+        </div>
       </div>
     </>
   );

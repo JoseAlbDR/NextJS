@@ -472,7 +472,7 @@ export const getOrder = async (id: string) => {
   }
 };
 
-export const getUserOrders = async ({ admin = false }: { admin?: boolean }) => {
+export const getUserOrders = async () => {
   const session = await auth();
   if (!session) {
     return {
@@ -481,15 +481,11 @@ export const getUserOrders = async ({ admin = false }: { admin?: boolean }) => {
     };
   }
 
-  const where: Prisma.OrderWhereInput = admin
-    ? {}
-    : {
-        userId: session.user.id,
-      };
-
   try {
     const orders = await prisma.order.findMany({
-      where,
+      where: {
+        userId: session.user.id,
+      },
       include: {
         OrderAddress: {
           select: {
@@ -664,5 +660,77 @@ export const getOrderStatus = async (orderId: string) => {
       ok: false,
       message: error.message,
     };
+  }
+};
+
+interface PaginatedOrdersPayload {
+  page?: number;
+  limit?: number;
+}
+
+export const getPaginatedOrders = async ({ page = 1, limit = 10 }) => {
+  if (isNaN(Number(page))) page = 1;
+  if (isNaN(Number(limit))) limit = 12;
+  if (page < 1) page = 1;
+  if (limit < 1) limit = 12;
+
+  const session = await auth();
+
+  console.log({ session });
+
+  if (session && session.user.role !== 'admin')
+    return { orders: [], totalPages: 0, currentPage: 1 };
+
+  try {
+    const orders = await prisma.order.findMany({
+      include: {
+        OrderAddress: true,
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    console.log({ orders });
+
+    return {
+      orders,
+      totalPages: Math.ceil((await prisma.order.count()) / limit),
+      currentPage: page,
+    };
+  } catch (error) {
+    console.log(error);
+    return { orders: [], totalPages: 0, currentPage: 1 };
+  }
+};
+
+export const getPaginatedUsers = async ({ page = 1, limit = 10 }) => {
+  if (isNaN(Number(page))) page = 1;
+  if (isNaN(Number(limit))) limit = 12;
+  if (page < 1) page = 1;
+  if (limit < 1) limit = 12;
+
+  const session = await auth();
+
+  console.log({ session });
+
+  if (session && session.user.role !== 'admin')
+    return { users: [], totalPages: 0, currentPage: 1 };
+
+  try {
+    const users = await prisma.user.findMany({
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    console.log({ users });
+
+    return {
+      users,
+      totalPages: Math.ceil((await prisma.order.count()) / limit),
+      currentPage: page,
+    };
+  } catch (error) {
+    console.log(error);
+    return { users: [], totalPages: 0, currentPage: 1 };
   }
 };

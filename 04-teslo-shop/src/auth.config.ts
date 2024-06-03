@@ -29,6 +29,10 @@ export const authConfig: NextAuthConfig = {
         '/checkout',
         '/checkout/address',
         '/orders',
+        '/admin/orders',
+        '/admin/products',
+        '/admin/users',
+        '/admin',
       ];
       const loginRoute = '/auth/login';
 
