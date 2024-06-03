@@ -6,4 +6,7 @@ export { changeUserRole } from './actions/user/change-user-role';
 export { mutateProductForm, type MutateProductType } from './types';
 
 export { getUniqueCategories } from './actions/product/get-unique-categories';
-export { mutateProduct } from './actions/product/mutate-product';
+export {
+  mutateProduct,
+  changeProductSizes,
+} from './actions/product/mutate-product';

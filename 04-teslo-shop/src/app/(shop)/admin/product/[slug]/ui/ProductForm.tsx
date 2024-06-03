@@ -1,12 +1,19 @@
 'use client';
 
 import { Product, Size } from '@/interfaces';
-import { MutateProductType, mutateProduct, mutateProductForm } from '@/lib';
+import {
+  MutateProductType,
+  changeProductSizes,
+  mutateProduct,
+  mutateProductForm,
+} from '@/lib';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Category } from '@prisma/client';
 import clsx from 'clsx';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import ErrorMessage from './ErrorMessage';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 interface Props {
   product: Product;
@@ -18,6 +25,7 @@ interface Props {
 const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
 const ProductForm = ({ product, categories }: Props) => {
+  const router = useRouter();
   const {
     handleSubmit,
     register,
@@ -37,11 +45,19 @@ const ProductForm = ({ product, categories }: Props) => {
   });
 
   const onSubmit: SubmitHandler<MutateProductType> = async (data) => {
-    const resp = await mutateProduct(data, product.slug);
+    const { ok, product: updatedProduct } = await mutateProduct(
+      data,
+      product.slug
+    );
 
-    if (resp.ok) {
+    if (ok) {
+      router.replace(`/admin/product/${updatedProduct!.slug}`);
       return;
     }
+  };
+
+  const handleSizeChanged = async (size: Size) => {
+    await changeProductSizes(size, product.slug);
   };
 
   return (
@@ -165,8 +181,7 @@ const ProductForm = ({ product, categories }: Props) => {
           <span>Tallas</span>
           <div className="flex flex-wrap">
             {sizes.map((size) => (
-              // bg-blue-500 text-white <--- si está seleccionado
-              <div
+              <button
                 key={size}
                 className={clsx(
                   'flex  items-center justify-center w-10 h-10 mr-2 border rounded-md',
@@ -176,9 +191,10 @@ const ProductForm = ({ product, categories }: Props) => {
                     ),
                   }
                 )}
+                onClick={() => handleSizeChanged(size as Size)}
               >
                 <span>{size}</span>
-              </div>
+              </button>
             ))}
           </div>
 

@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import { Title } from '@/components';
 import { getProduct } from '@/lib/actions';
 import ProductForm from './ui/ProductForm';
