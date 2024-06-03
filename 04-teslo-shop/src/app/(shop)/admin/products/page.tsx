@@ -28,7 +28,7 @@ const OrdersPage = async ({ searchParams }: Props) => {
       <Title title="Mantenimiento de productos" />
 
       <div className="flex justify-end mb-5">
-        <Link href="/admin/products/new" className="btn-primary">
+        <Link href="/admin/product/new" className="btn-primary">
           Nuevo Producto
         </Link>
       </div>
@@ -83,7 +83,7 @@ const OrdersPage = async ({ searchParams }: Props) => {
               >
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                   <Link
-                    href={`/admin/products/${product.slug}`}
+                    href={`/admin/product/${product.slug}`}
                     className="w-20 h-20 object-cover rounded"
                   >
                     <Image
@@ -97,7 +97,7 @@ const OrdersPage = async ({ searchParams }: Props) => {
                 </td>
                 <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                   <Link
-                    href={`/admin/products/${product.slug}`}
+                    href={`/admin/product/${product.slug}`}
                     className="hover:text-blue-500 underline"
                   >
                     {product.title}
