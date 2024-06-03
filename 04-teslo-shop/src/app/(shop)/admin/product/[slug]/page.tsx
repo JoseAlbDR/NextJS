@@ -2,7 +2,7 @@ import { Title } from '@/components';
 import { getProduct } from '@/lib/actions';
 import ProductForm from './ui/ProductForm';
 import { notFound } from 'next/navigation';
-import { getUniqueCategories } from '@/lib/actions/product/get-unique-categories';
+import { getUniqueCategories } from '@/lib';
 
 interface Props {
   params: {

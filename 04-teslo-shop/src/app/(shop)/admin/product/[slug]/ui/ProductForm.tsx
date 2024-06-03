@@ -1,11 +1,12 @@
 'use client';
 
 import { Product, Size } from '@/interfaces';
-import { MutateProductType, mutateProductForm } from '@/lib';
+import { MutateProductType, mutateProduct, mutateProductForm } from '@/lib';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Category } from '@prisma/client';
 import clsx from 'clsx';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import ErrorMessage from './ErrorMessage';
 
 interface Props {
   product: Product;
@@ -17,8 +18,6 @@ interface Props {
 const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
 const ProductForm = ({ product, categories }: Props) => {
-  console.log({ product });
-
   const {
     handleSubmit,
     register,
@@ -38,11 +37,18 @@ const ProductForm = ({ product, categories }: Props) => {
   });
 
   const onSubmit: SubmitHandler<MutateProductType> = async (data) => {
-    console.log(data);
+    const resp = await mutateProduct(data, product.slug);
+
+    if (resp.ok) {
+      return;
+    }
   };
 
   return (
-    <form className="grid px-5 mb-16 grid-cols-1 sm:px-0 sm:grid-cols-2 gap-3">
+    <form
+      className="grid px-5 mb-16 grid-cols-1 sm:px-0 sm:grid-cols-2 gap-3"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       {/* Textos */}
       <div className="w-full">
         <div className="flex flex-col mb-2">
@@ -52,6 +58,9 @@ const ProductForm = ({ product, categories }: Props) => {
             className="p-2 border rounded-md bg-gray-200"
             {...register('title')}
           />
+          {errors.title && (
+            <ErrorMessage error={errors.title.message || 'Error desconocido'} />
+          )}
         </div>
 
         <div className="flex flex-col mb-2">
@@ -62,6 +71,9 @@ const ProductForm = ({ product, categories }: Props) => {
             {...register('slug')}
             disabled
           />
+          {errors.slug && (
+            <ErrorMessage error={errors.slug.message || 'Error desconocido'} />
+          )}
         </div>
 
         <div className="flex flex-col mb-2">
@@ -71,6 +83,11 @@ const ProductForm = ({ product, categories }: Props) => {
             className="p-2 border rounded-md bg-gray-200"
             {...register('description')}
           ></textarea>
+          {errors.description && (
+            <ErrorMessage
+              error={errors.description.message || 'Error desconocido'}
+            />
+          )}
         </div>
 
         <div className="flex flex-col mb-2">
@@ -78,8 +95,11 @@ const ProductForm = ({ product, categories }: Props) => {
           <input
             type="number"
             className="p-2 border rounded-md bg-gray-200"
-            {...register('price')}
+            {...register('price', { valueAsNumber: true })}
           />
+          {errors.price && (
+            <ErrorMessage error={errors.price.message || 'Error desconocido'} />
+          )}
         </div>
 
         <div className="flex flex-col mb-2">
@@ -89,6 +109,9 @@ const ProductForm = ({ product, categories }: Props) => {
             className="p-2 border rounded-md bg-gray-200"
             {...register('tags')}
           />
+          {errors.tags && (
+            <ErrorMessage error={errors.tags.message || 'Error desconocido'} />
+          )}
         </div>
 
         <div className="flex flex-col mb-2">
@@ -103,6 +126,11 @@ const ProductForm = ({ product, categories }: Props) => {
             <option value="kid">Kid</option>
             <option value="unisex">Unisex</option>
           </select>
+          {errors.gender && (
+            <ErrorMessage
+              error={errors.gender.message || 'Error desconocido'}
+            />
+          )}
         </div>
 
         <div className="flex flex-col mb-2">
@@ -113,14 +141,21 @@ const ProductForm = ({ product, categories }: Props) => {
             defaultValue={product.type}
           >
             {categories.map((cat) => (
-              <option value={cat.name} key={cat.name}>
+              <option value={cat.name} key={cat.name} className="capitalize">
                 {cat.name}
               </option>
             ))}
           </select>
+          {errors.category && (
+            <ErrorMessage
+              error={errors.category.message || 'Error desconocido'}
+            />
+          )}
         </div>
 
-        <button className="btn-primary w-full">Guardar</button>
+        <button className="btn-primary w-full" type="submit">
+          Guardar
+        </button>
       </div>
 
       {/* Selector de tallas y fotos */}
