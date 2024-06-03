@@ -14,6 +14,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import ErrorMessage from './ErrorMessage';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import Image from 'next/image';
 
 interface Props {
   product: Product;
@@ -206,6 +207,18 @@ const ProductForm = ({ product, categories }: Props) => {
               className="p-2 border rounded-md bg-gray-200"
               accept="image/png, image/jpeg"
             />
+            <div className="flex flex-wrap gap-2">
+              {product.images.map((image) => (
+                <Image
+                  key={image}
+                  src={`/products/${image}`}
+                  alt={product.title}
+                  width={250}
+                  height={250}
+                  className="w-28 h-28 object-cover m-2"
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>
