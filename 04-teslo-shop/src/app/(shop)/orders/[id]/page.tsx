@@ -1,5 +1,5 @@
 import { PaypalButton, Title } from '@/components';
-import { getOrder, getOrderStatus } from '@/lib/actions';
+import { getOrder } from '@/lib/actions';
 import { currencyFormat } from '@/utils';
 import React from 'react';
 import OrderCart from './ui/OrderCart';
@@ -15,8 +15,6 @@ const OrderPage = async ({ params }: Props) => {
   const { order, ok, message } = await getOrder(params.id);
 
   if (!ok) return <div className="text-center h-full">{message}</div>;
-
-  const { status: isPaid } = await getOrderStatus(order!.id);
 
   return (
     <div className="flex justify-center items-center mb-72 px-10 sm:px-0">
@@ -63,8 +61,8 @@ const OrderPage = async ({ params }: Props) => {
                 </span>
               </div>
               <div className="mt-5 mb-2 w-full">
-                {isPaid ? (
-                  <PaidLabel isPaid={isPaid || false} />
+                {order!.isPaid ? (
+                  <PaidLabel isPaid={order!.isPaid || false} />
                 ) : (
                   <PaypalButton amount={order?.total!} orderId={order?.id!} />
                 )}

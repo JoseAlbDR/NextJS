@@ -9,7 +9,7 @@ import React from 'react';
 import { IoCardOutline } from 'react-icons/io5';
 
 const OrdersPage = async () => {
-  const { orders } = await getUserOrders({ admin: false });
+  const { orders } = await getUserOrders({ admin: true });
 
   return (
     <>

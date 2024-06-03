@@ -472,7 +472,7 @@ export const getOrder = async (id: string) => {
   }
 };
 
-export const getUserOrders = async () => {
+export const getUserOrders = async ({ admin = false }: { admin?: boolean }) => {
   const session = await auth();
   if (!session) {
     return {
@@ -481,11 +481,15 @@ export const getUserOrders = async () => {
     };
   }
 
+  const where: Prisma.OrderWhereInput = admin
+    ? {}
+    : {
+        userId: session.user.id,
+      };
+
   try {
     const orders = await prisma.order.findMany({
-      where: {
-        userId: session.user.id,
-      },
+      where,
       include: {
         OrderAddress: {
           select: {
