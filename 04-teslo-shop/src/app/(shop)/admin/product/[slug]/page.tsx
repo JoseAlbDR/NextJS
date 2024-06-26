@@ -16,8 +16,13 @@ interface Props {
 const ProductPage = async ({ params }: Props) => {
   const { slug } = params;
 
-  const product = await getProduct({ slug });
-  const categories = await getUniqueCategories();
+  // const product = await getProduct({ slug });
+  // const categories = await getUniqueCategories();
+
+  const [product, categories] = await Promise.all([
+    getProduct({ slug }),
+    getUniqueCategories(),
+  ]);
 
   if (!product) notFound();
 
