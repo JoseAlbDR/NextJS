@@ -45,8 +45,6 @@ const ProductForm = ({ product, categories }: Props) => {
     },
   });
 
-  console.log({ product });
-
   const onSubmit: SubmitHandler<MutateProductType> = async (data) => {
     const { ok, product: updatedProduct } = await mutateProduct(
       data,
@@ -191,7 +189,7 @@ const ProductForm = ({ product, categories }: Props) => {
               <button
                 key={size}
                 className={clsx(
-                  'flex  items-center justify-center w-10 h-10 mr-2 border rounded-md',
+                  'flex items-center justify-center w-10 h-10 mr-2 border rounded-md transition-all',
                   {
                     'bg-blue-500 text-white': product.sizes.includes(
                       size as Size
@@ -224,7 +222,10 @@ const ProductForm = ({ product, categories }: Props) => {
                     className="rounded-t shadow-md"
                   />
 
-                  <button className="btn-delete rounded-b-xl w-full">
+                  <button
+                    className="btn-delete rounded-b-xl w-full"
+                    onClick={() => console.log(image.id, image.url)}
+                  >
                     Eliminar
                   </button>
                 </div>
