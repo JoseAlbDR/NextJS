@@ -73,7 +73,7 @@ const ProductForm = ({ product, categories }: Props) => {
           <input
             type="text"
             className="p-2 border rounded-md bg-gray-200"
-            {...register('title')}
+            {...register('title', { required: true })}
           />
           {errors.title && (
             <ErrorMessage error={errors.title.message || 'Error desconocido'} />
@@ -85,7 +85,7 @@ const ProductForm = ({ product, categories }: Props) => {
           <input
             type="text"
             className="p-2 border rounded-md bg-gray-200"
-            {...register('slug')}
+            {...register('slug', { required: true })}
             disabled
           />
           {errors.slug && (
@@ -112,7 +112,11 @@ const ProductForm = ({ product, categories }: Props) => {
           <input
             type="number"
             className="p-2 border rounded-md bg-gray-200"
-            {...register('price', { valueAsNumber: true })}
+            {...register('price', {
+              valueAsNumber: true,
+              min: 0,
+              required: true,
+            })}
           />
           {errors.price && (
             <ErrorMessage error={errors.price.message || 'Error desconocido'} />
@@ -124,7 +128,7 @@ const ProductForm = ({ product, categories }: Props) => {
           <input
             type="text"
             className="p-2 border rounded-md bg-gray-200"
-            {...register('tags')}
+            {...register('tags', { required: true })}
           />
           {errors.tags && (
             <ErrorMessage error={errors.tags.message || 'Error desconocido'} />
@@ -135,7 +139,7 @@ const ProductForm = ({ product, categories }: Props) => {
           <span>Gender</span>
           <select
             className="p-2 border rounded-md bg-gray-200"
-            {...register('gender')}
+            {...register('gender', { required: true })}
           >
             <option value="">[Seleccione]</option>
             <option value="men">Men</option>
@@ -154,7 +158,7 @@ const ProductForm = ({ product, categories }: Props) => {
           <span>Categoria</span>
           <select
             className="p-2 border rounded-md bg-gray-200"
-            {...register('category')}
+            {...register('category', { required: true })}
             defaultValue={product.type}
           >
             {categories.map((cat) => (
