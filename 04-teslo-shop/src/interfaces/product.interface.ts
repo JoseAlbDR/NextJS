@@ -11,6 +11,19 @@ export interface Product {
   type: Type;
   gender: Category;
 }
+export interface FormProduct {
+  id: string;
+  description: string;
+  images: { url: string; id: number }[];
+  inStock: number;
+  price: number;
+  sizes: Size[];
+  slug: string;
+  tags: string[];
+  title: string;
+  type: Type;
+  gender: Category;
+}
 
 export interface CartProduct {
   id: string;

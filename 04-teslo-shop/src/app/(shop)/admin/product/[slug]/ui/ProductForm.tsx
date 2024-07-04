@@ -1,6 +1,6 @@
 'use client';
 
-import { Product, Size } from '@/interfaces';
+import { FormProduct, Product, Size } from '@/interfaces';
 import {
   MutateProductType,
   changeProductSizes,
@@ -17,7 +17,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 
 interface Props {
-  product: Product;
+  product: FormProduct;
   categories: {
     name: string;
   }[];
@@ -44,6 +44,8 @@ const ProductForm = ({ product, categories }: Props) => {
       slug: product.title.split(' ').join('_').toLowerCase(),
     },
   });
+
+  console.log({ product });
 
   const onSubmit: SubmitHandler<MutateProductType> = async (data) => {
     const { ok, product: updatedProduct } = await mutateProduct(
@@ -211,16 +213,21 @@ const ProductForm = ({ product, categories }: Props) => {
               className="p-2 border rounded-md bg-gray-200"
               accept="image/png, image/jpeg"
             />
-            <div className="flex flex-wrap gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {product.images.map((image) => (
-                <Image
-                  key={image}
-                  src={`/products/${image}`}
-                  alt={product.title}
-                  width={250}
-                  height={250}
-                  className="w-28 h-28 object-cover m-2"
-                />
+                <div key={image.id} className="mt-4">
+                  <Image
+                    src={`/products/${image.url}`}
+                    alt={product.title}
+                    width={300}
+                    height={300}
+                    className="rounded-t shadow-md"
+                  />
+
+                  <button className="btn-delete rounded-b-xl w-full">
+                    Eliminar
+                  </button>
+                </div>
               ))}
             </div>
           </div>

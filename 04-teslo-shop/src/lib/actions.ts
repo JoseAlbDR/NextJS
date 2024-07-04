@@ -113,14 +113,12 @@ export const getStockBySlug = async ({ slug }: SlugPayload) => {
   }
 };
 
-export const getProduct = async ({
-  slug,
-}: SlugPayload): Promise<Product | null> => {
+export const getProduct = async ({ slug }: SlugPayload) => {
   try {
     const product = await prisma.product.findUnique({
       where: { slug },
       include: {
-        images: { select: { url: true } },
+        images: { select: { url: true, id: true } },
         category: { select: { name: true } },
       },
     });
@@ -129,7 +127,7 @@ export const getProduct = async ({
 
     return {
       ...product,
-      images: product.images.map((image) => image.url),
+      images: product.images.map((image) => ({ url: image.url, id: image.id })),
       type: product.category.name as Type,
     };
   } catch (error) {
