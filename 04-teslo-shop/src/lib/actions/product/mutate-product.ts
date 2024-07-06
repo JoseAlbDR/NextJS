@@ -20,6 +20,7 @@ const productSchema = z.object({
     .number()
     .min(0)
     .transform((val) => Number(val.toFixed(0))),
+  category: z.string().uuid(),
 });
 
 export const mutateProduct = async (data: MutateProductType, slug: string) => {

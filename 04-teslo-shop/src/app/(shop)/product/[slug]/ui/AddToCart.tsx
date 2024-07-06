@@ -1,11 +1,11 @@
 'use client';
 import { SizeSelector, QuantitySelector } from '@/components';
-import { Product, Size } from '@/interfaces';
+import { FormProduct, Product, Size } from '@/interfaces';
 import { useCartStore } from '@/store';
 import React, { useState } from 'react';
 
 interface Props {
-  product: Product;
+  product: FormProduct;
 }
 
 const AddToCart = ({ product }: Props) => {
@@ -20,7 +20,7 @@ const AddToCart = ({ product }: Props) => {
 
     addProductToCart({
       id: product.id,
-      image: product.images[0],
+      image: product.images[0].url,
       price: product.price,
       quantity: quantity,
       size: size,

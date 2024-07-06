@@ -14,7 +14,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, EffectFade, Pagination } from 'swiper/modules';
 
 interface Props {
-  images: string[];
+  images: { url: string; id: number }[];
   title: string;
   className?: string;
 }
@@ -40,9 +40,9 @@ const MobileSlideShow = ({ images, title, className }: Props) => {
         className="mySwiper"
       >
         {images.map((image) => (
-          <SwiperSlide key={image}>
+          <SwiperSlide key={image.id}>
             <Image
-              src={`/products/${image}`}
+              src={`/products/${image.url}`}
               alt={title}
               width={600}
               height={500}
