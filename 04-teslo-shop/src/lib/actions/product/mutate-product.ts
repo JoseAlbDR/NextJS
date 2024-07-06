@@ -4,24 +4,27 @@ import { auth } from '@/auth.config';
 import { Size } from '@/interfaces';
 import prisma from '@/lib/db';
 import { MutateProductType } from '@/lib/types';
+import { Gender } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
-const productSchema = z.object({
-  id: z.string().uuid().optional().nullable(),
-  title: z.string().min(3).max(255),
-  slug: z.string().min(3).max(255),
-  description: z.string(),
-  price: z.coerce
-    .number()
-    .min(0)
-    .transform((val) => Number(val.toFixed(2))),
-  inStock: z.coerce
-    .number()
-    .min(0)
-    .transform((val) => Number(val.toFixed(0))),
-  category: z.string().uuid(),
-});
+// const productSchema = z.object({
+//   id: z.string().uuid().optional().nullable(),
+//   title: z.string().min(3).max(255),
+//   slug: z.string().min(3).max(255),
+//   description: z.string(),
+//   price: z.coerce
+//     .number()
+//     .min(0)
+//     .transform((val) => Number(val.toFixed(2))),
+//   inStock: z.coerce
+//     .number()
+//     .min(0)
+//     .transform((val) => Number(val.toFixed(0))),
+//   category: z.string().uuid(),
+//   tags: z.string(),
+//   gender: z.nativeEnum(Gender),
+// });
 
 export const mutateProduct = async (data: MutateProductType, slug: string) => {
   const session = await auth();

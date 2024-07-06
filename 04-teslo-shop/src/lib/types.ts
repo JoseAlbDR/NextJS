@@ -20,11 +20,11 @@ export const mutateProductForm = z.object({
   category: z.enum(['shirts', 'pants', 'hoodies', 'hats'], {
     errorMap: () => ({ message: 'La categoria es requerida' }),
   }),
-
-  // images: z.array(z.string().url({ message: 'La imagen es requerida' })),
-  // sizes: z.enum(['XS', 'S', 'M', 'L', 'XL', 'XXL'], {
-  //   errorMap: () => ({ message: 'Las tallas son requeridas' }),
-  // }),
+  slug: z.string().min(3).max(255),
+  inStock: z.coerce
+    .number()
+    .min(0)
+    .transform((val) => Number(val.toFixed(0))),
 });
 
 export type MutateProductType = z.infer<typeof mutateProductForm>;

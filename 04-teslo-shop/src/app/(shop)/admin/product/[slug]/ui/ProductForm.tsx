@@ -42,10 +42,13 @@ const ProductForm = ({ product, categories }: Props) => {
       category: product.type,
       images: product.images,
       slug: product.title.split(' ').join('_').toLowerCase(),
+      inStock: product.inStock || 0,
     },
   });
 
   const onSubmit: SubmitHandler<MutateProductType> = async (data) => {
+    console.log({ data });
+
     const { ok, product: updatedProduct } = await mutateProduct(
       data,
       product.slug
@@ -171,6 +174,22 @@ const ProductForm = ({ product, categories }: Props) => {
             <ErrorMessage
               error={errors.category.message || 'Error desconocido'}
             />
+          )}
+        </div>
+
+        <div className="flex flex-col mb-2">
+          <span>In Stock</span>
+          <input
+            type="number"
+            className="p-2 border rounded-md bg-gray-200"
+            {...register('inStock', {
+              valueAsNumber: true,
+              min: 0,
+              required: true,
+            })}
+          />
+          {errors.price && (
+            <ErrorMessage error={errors.price.message || 'Error desconocido'} />
           )}
         </div>
 
